@@ -1,0 +1,596 @@
+{
+  "build": "py37_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/linux-64",
+  "constrains": [],
+  "depends": [
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "patsy",
+    "python >=3.7,<3.8.0a0",
+    "scipy",
+    "statsmodels"
+  ],
+  "extracted_package_dir": "/home/anw/tabroeders/.conda/pkgs/seaborn-0.8.1-py37_0",
+  "features": "",
+  "files": [
+    "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/PKG-INFO",
+    "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/SOURCES.txt",
+    "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/dependency_links.txt",
+    "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/requires.txt",
+    "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/top_level.txt",
+    "lib/python3.7/site-packages/seaborn/__init__.py",
+    "lib/python3.7/site-packages/seaborn/__pycache__/__init__.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/algorithms.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/apionly.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/axisgrid.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/categorical.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/cm.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/crayons.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/distributions.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/linearmodels.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/matrix.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/miscplot.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/palettes.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/rcmod.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/regression.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/timeseries.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/utils.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/widgets.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/__pycache__/xkcd_rgb.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/algorithms.py",
+    "lib/python3.7/site-packages/seaborn/apionly.py",
+    "lib/python3.7/site-packages/seaborn/axisgrid.py",
+    "lib/python3.7/site-packages/seaborn/categorical.py",
+    "lib/python3.7/site-packages/seaborn/cm.py",
+    "lib/python3.7/site-packages/seaborn/crayons.py",
+    "lib/python3.7/site-packages/seaborn/distributions.py",
+    "lib/python3.7/site-packages/seaborn/external/__init__.py",
+    "lib/python3.7/site-packages/seaborn/external/__pycache__/__init__.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/external/__pycache__/husl.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/external/__pycache__/six.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/external/husl.py",
+    "lib/python3.7/site-packages/seaborn/external/six.py",
+    "lib/python3.7/site-packages/seaborn/linearmodels.py",
+    "lib/python3.7/site-packages/seaborn/matrix.py",
+    "lib/python3.7/site-packages/seaborn/miscplot.py",
+    "lib/python3.7/site-packages/seaborn/palettes.py",
+    "lib/python3.7/site-packages/seaborn/rcmod.py",
+    "lib/python3.7/site-packages/seaborn/regression.py",
+    "lib/python3.7/site-packages/seaborn/tests/__init__.py",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/__init__.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_algorithms.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_axisgrid.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_categorical.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_distributions.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_matrix.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_miscplot.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_palettes.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_rcmod.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_regression.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_utils.cpython-37.pyc",
+    "lib/python3.7/site-packages/seaborn/tests/test_algorithms.py",
+    "lib/python3.7/site-packages/seaborn/tests/test_axisgrid.py",
+    "lib/python3.7/site-packages/seaborn/tests/test_categorical.py",
+    "lib/python3.7/site-packages/seaborn/tests/test_distributions.py",
+    "lib/python3.7/site-packages/seaborn/tests/test_matrix.py",
+    "lib/python3.7/site-packages/seaborn/tests/test_miscplot.py",
+    "lib/python3.7/site-packages/seaborn/tests/test_palettes.py",
+    "lib/python3.7/site-packages/seaborn/tests/test_rcmod.py",
+    "lib/python3.7/site-packages/seaborn/tests/test_regression.py",
+    "lib/python3.7/site-packages/seaborn/tests/test_utils.py",
+    "lib/python3.7/site-packages/seaborn/timeseries.py",
+    "lib/python3.7/site-packages/seaborn/utils.py",
+    "lib/python3.7/site-packages/seaborn/widgets.py",
+    "lib/python3.7/site-packages/seaborn/xkcd_rgb.py"
+  ],
+  "fn": "seaborn-0.8.1-py37_0.conda",
+  "legacy_bz2_md5": "1dccc9d0c1eea330b8fb6287d8bd98a9",
+  "legacy_bz2_size": 342476,
+  "license": "BSD 3-Clause",
+  "license_family": "BSD",
+  "link": {
+    "source": "/home/anw/tabroeders/.conda/pkgs/seaborn-0.8.1-py37_0",
+    "type": 1
+  },
+  "md5": "16b489b2302294e9e3c40de6bdc6d5e1",
+  "name": "seaborn",
+  "package_tarball_full_path": "/home/anw/tabroeders/.conda/pkgs/seaborn-0.8.1-py37_0.conda",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/PKG-INFO",
+        "path_type": "hardlink",
+        "sha256": "82cc37ff19b6df2f058a04d3b45e19ffd5654658f95ba03eb35c242e5e7fa4f6",
+        "sha256_in_prefix": "82cc37ff19b6df2f058a04d3b45e19ffd5654658f95ba03eb35c242e5e7fa4f6",
+        "size_in_bytes": 2035
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/SOURCES.txt",
+        "path_type": "hardlink",
+        "sha256": "152b02cf1ba1cb3baba29da5cfb4d6df1e5d4f130bc1e502b11964ece5cee63e",
+        "sha256_in_prefix": "152b02cf1ba1cb3baba29da5cfb4d6df1e5d4f130bc1e502b11964ece5cee63e",
+        "size_in_bytes": 1040
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/dependency_links.txt",
+        "path_type": "hardlink",
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "sha256_in_prefix": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "size_in_bytes": 1
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/requires.txt",
+        "path_type": "hardlink",
+        "sha256": "d82e736a00366dded6b79b8c523da81968111fe02c4128e0b9506c4b8f488370",
+        "sha256_in_prefix": "d82e736a00366dded6b79b8c523da81968111fe02c4128e0b9506c4b8f488370",
+        "size_in_bytes": 30
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn-0.8.1-py3.7.egg-info/top_level.txt",
+        "path_type": "hardlink",
+        "sha256": "191214d5969dac63402c4d711b9e066d313123b7ef4a4109621ea9f175e0a1e2",
+        "sha256_in_prefix": "191214d5969dac63402c4d711b9e066d313123b7ef4a4109621ea9f175e0a1e2",
+        "size_in_bytes": 8
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__init__.py",
+        "path_type": "hardlink",
+        "sha256": "2355824ef28abb3419b864f49ad6e9c3411214508e79b87d5c4cff1e6917d5ae",
+        "sha256_in_prefix": "2355824ef28abb3419b864f49ad6e9c3411214508e79b87d5c4cff1e6917d5ae",
+        "size_in_bytes": 499
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/__init__.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "9ec6e483e6180a4ad6f48c03ce863f24ca17908026c8aa98610e2814f47820e3",
+        "sha256_in_prefix": "9ec6e483e6180a4ad6f48c03ce863f24ca17908026c8aa98610e2814f47820e3",
+        "size_in_bytes": 553
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/algorithms.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "83a61a208661043912748761a19830598af21f83820cc30ad9647d8a8fa1661d",
+        "sha256_in_prefix": "83a61a208661043912748761a19830598af21f83820cc30ad9647d8a8fa1661d",
+        "size_in_bytes": 6952
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/apionly.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "a378fb02329c169c739caba2918eef4230a5d6bdbf8a9972987a6bf939fdc62e",
+        "sha256_in_prefix": "a378fb02329c169c739caba2918eef4230a5d6bdbf8a9972987a6bf939fdc62e",
+        "size_in_bytes": 377
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/axisgrid.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "d052b421dbffd55e1315fef84b2b6d8653db42995f7353f92a3fa451b3771493",
+        "sha256_in_prefix": "d052b421dbffd55e1315fef84b2b6d8653db42995f7353f92a3fa451b3771493",
+        "size_in_bytes": 66160
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/categorical.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "a1fb5c3c09f27bdf4d43d15f23f676ef9b7d3f5c4b5d8ec925815e65e8d4a102",
+        "sha256_in_prefix": "a1fb5c3c09f27bdf4d43d15f23f676ef9b7d3f5c4b5d8ec925815e65e8d4a102",
+        "size_in_bytes": 95860
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/cm.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "d528627175884e687290cbbf3417d8f55851ccfc383080d900e28936d5f4b095",
+        "sha256_in_prefix": "d528627175884e687290cbbf3417d8f55851ccfc383080d900e28936d5f4b095",
+        "size_in_bytes": 44096
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/crayons.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "cdbf810abe4326db903ca428eddeac4a498b89c30bdf805490e58c4dc59d8e94",
+        "sha256_in_prefix": "cdbf810abe4326db903ca428eddeac4a498b89c30bdf805490e58c4dc59d8e94",
+        "size_in_bytes": 3155
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/distributions.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "3c7f2437782dff234b518f38ad96f9ad2d12298b7591525e533c22913375c9b5",
+        "sha256_in_prefix": "3c7f2437782dff234b518f38ad96f9ad2d12298b7591525e533c22913375c9b5",
+        "size_in_bytes": 18432
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/linearmodels.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "5999fef25f873b47da19a4925062dd3f98256f3803101968054cfebc06433822",
+        "sha256_in_prefix": "5999fef25f873b47da19a4925062dd3f98256f3803101968054cfebc06433822",
+        "size_in_bytes": 277
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/matrix.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "eeba61bd52b80bef19020e51efbf248a9e04133423012fe59f2da18372743b97",
+        "sha256_in_prefix": "eeba61bd52b80bef19020e51efbf248a9e04133423012fe59f2da18372743b97",
+        "size_in_bytes": 35222
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/miscplot.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "30c59cf1ecb8615d19011f82471e0c2e5698cc801cfe5c8e1c21b9a0077fba82",
+        "sha256_in_prefix": "30c59cf1ecb8615d19011f82471e0c2e5698cc801cfe5c8e1c21b9a0077fba82",
+        "size_in_bytes": 1035
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/palettes.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "3fa19ba275e8c02480c5a838607a847361ca2004fc688eabba0abd51cc97993e",
+        "sha256_in_prefix": "3fa19ba275e8c02480c5a838607a847361ca2004fc688eabba0abd51cc97993e",
+        "size_in_bytes": 29528
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/rcmod.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "a18252f8c3a15dc14bd28eea3f4a857a2bf5cdb0c4960f10f02e4a5e692edd36",
+        "sha256_in_prefix": "a18252f8c3a15dc14bd28eea3f4a857a2bf5cdb0c4960f10f02e4a5e692edd36",
+        "size_in_bytes": 14631
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/regression.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "6d75f29ca3fbf3fae61dfcbe3c95b29bb7f3024bbc0a2654544478ab3a9b9e6c",
+        "sha256_in_prefix": "6d75f29ca3fbf3fae61dfcbe3c95b29bb7f3024bbc0a2654544478ab3a9b9e6c",
+        "size_in_bytes": 38552
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/timeseries.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "2610850f98152897034e05d01f7a57613f7a796820bd9054933381026b86eb01",
+        "sha256_in_prefix": "2610850f98152897034e05d01f7a57613f7a796820bd9054933381026b86eb01",
+        "size_in_bytes": 12771
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/utils.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "b9829df9c8a84cb945d71a6bc5dd56b3f70eb61c079e0603765e6e70ad439b27",
+        "sha256_in_prefix": "b9829df9c8a84cb945d71a6bc5dd56b3f70eb61c079e0603765e6e70ad439b27",
+        "size_in_bytes": 16533
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/widgets.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "f58e97dc62cbd3e73e49d379d0cca4aa846a1e1251c18e240e6a67bd4ec51afb",
+        "sha256_in_prefix": "f58e97dc62cbd3e73e49d379d0cca4aa846a1e1251c18e240e6a67bd4ec51afb",
+        "size_in_bytes": 13152
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/__pycache__/xkcd_rgb.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "2cbb069daf9ee548ae9d56ccc67192c6f76273cdc5400507917c426ce7f6a4a4",
+        "sha256_in_prefix": "2cbb069daf9ee548ae9d56ccc67192c6f76273cdc5400507917c426ce7f6a4a4",
+        "size_in_bytes": 25536
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/algorithms.py",
+        "path_type": "hardlink",
+        "sha256": "265db1c6f3f0de2764c34d65d18518c76c8c4252cf70beda7c181afac5b7f1e6",
+        "sha256_in_prefix": "265db1c6f3f0de2764c34d65d18518c76c8c4252cf70beda7c181afac5b7f1e6",
+        "size_in_bytes": 6889
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/apionly.py",
+        "path_type": "hardlink",
+        "sha256": "a6e02ceeb47af10e445d6089c7366a9d6a382b3e643f1bcbfd9192f21bc253eb",
+        "sha256_in_prefix": "a6e02ceeb47af10e445d6089c7366a9d6a382b3e643f1bcbfd9192f21bc253eb",
+        "size_in_bytes": 242
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/axisgrid.py",
+        "path_type": "hardlink",
+        "sha256": "cf165fbec52338053cc5007bc498fc01028658d44c9fee9608c068020b4768b8",
+        "sha256_in_prefix": "cf165fbec52338053cc5007bc498fc01028658d44c9fee9608c068020b4768b8",
+        "size_in_bytes": 83307
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/categorical.py",
+        "path_type": "hardlink",
+        "sha256": "dee19ba7f40161c9f5ba6b53eb8885d7dca22587feec371d3fa47b2b51b37e89",
+        "sha256_in_prefix": "dee19ba7f40161c9f5ba6b53eb8885d7dca22587feec371d3fa47b2b51b37e89",
+        "size_in_bytes": 137772
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/cm.py",
+        "path_type": "hardlink",
+        "sha256": "7332de783cb548796b476769b28a7c2090b6e8f7eab1934383b344cb812b3093",
+        "sha256_in_prefix": "7332de783cb548796b476769b28a7c2090b6e8f7eab1934383b344cb812b3093",
+        "size_in_bytes": 44563
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/crayons.py",
+        "path_type": "hardlink",
+        "sha256": "8aa371331e06f093f7876cde29595399fd67cddc6c565cf78e421be35f777d2c",
+        "sha256_in_prefix": "8aa371331e06f093f7876cde29595399fd67cddc6c565cf78e421be35f777d2c",
+        "size_in_bytes": 4330
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/distributions.py",
+        "path_type": "hardlink",
+        "sha256": "8da382c3ef211461937d4411d9428b99ab6531592e4b1cc9fdeacc545f8dae21",
+        "sha256_in_prefix": "8da382c3ef211461937d4411d9428b99ab6531592e4b1cc9fdeacc545f8dae21",
+        "size_in_bytes": 22556
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/external/__init__.py",
+        "path_type": "hardlink",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha256_in_prefix": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_in_bytes": 0
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/external/__pycache__/__init__.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "23692212fd3d9e3fbc8a12c6b33dfaac389f791f2dfc7b2a25d7118190e8c388",
+        "sha256_in_prefix": "23692212fd3d9e3fbc8a12c6b33dfaac389f791f2dfc7b2a25d7118190e8c388",
+        "size_in_bytes": 143
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/external/__pycache__/husl.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "790a4c53ad889bc70daa7717fa638f7570de7480bc913b2b977315738ce503d1",
+        "sha256_in_prefix": "790a4c53ad889bc70daa7717fa638f7570de7480bc913b2b977315738ce503d1",
+        "size_in_bytes": 8007
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/external/__pycache__/six.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "5f009d8dc3fc47bd61dd6f5b6c6143bb4745d3cff3d90fb3cc5a930f16ab686d",
+        "sha256_in_prefix": "5f009d8dc3fc47bd61dd6f5b6c6143bb4745d3cff3d90fb3cc5a930f16ab686d",
+        "size_in_bytes": 24344
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/external/husl.py",
+        "path_type": "hardlink",
+        "sha256": "b8769237ad23772e811420a102bb68361a7258b8a2744842b4d042871a311dfb",
+        "sha256_in_prefix": "b8769237ad23772e811420a102bb68361a7258b8a2744842b4d042871a311dfb",
+        "size_in_bytes": 6666
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/external/six.py",
+        "path_type": "hardlink",
+        "sha256": "585761883d4217c5c7db06a8a2dc60ad13840e09b2319a9214e35c5f65967abb",
+        "sha256_in_prefix": "585761883d4217c5c7db06a8a2dc60ad13840e09b2319a9214e35c5f65967abb",
+        "size_in_bytes": 30099
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/linearmodels.py",
+        "path_type": "hardlink",
+        "sha256": "a8b9c5ed0bee30841ff535108d87bbdf615b0644d1d6bbe38d7e29b0a07c3dbd",
+        "sha256_in_prefix": "a8b9c5ed0bee30841ff535108d87bbdf615b0644d1d6bbe38d7e29b0a07c3dbd",
+        "size_in_bytes": 134
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/matrix.py",
+        "path_type": "hardlink",
+        "sha256": "d7aff0c060888de5340d82a739e15e0efda7ed3838b78aa754b5687e3738c251",
+        "sha256_in_prefix": "d7aff0c060888de5340d82a739e15e0efda7ed3838b78aa754b5687e3738c251",
+        "size_in_bytes": 47034
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/miscplot.py",
+        "path_type": "hardlink",
+        "sha256": "7700e72f18fd87ffdcb1f8a96a7e0e690b0090feaeb04f095906d48952731b42",
+        "sha256_in_prefix": "7700e72f18fd87ffdcb1f8a96a7e0e690b0090feaeb04f095906d48952731b42",
+        "size_in_bytes": 763
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/palettes.py",
+        "path_type": "hardlink",
+        "sha256": "730bfceddb3e602a743a9885d70c4e15859e32a28b56f2fa968e3693865cac32",
+        "sha256_in_prefix": "730bfceddb3e602a743a9885d70c4e15859e32a28b56f2fa968e3693865cac32",
+        "size_in_bytes": 29151
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/rcmod.py",
+        "path_type": "hardlink",
+        "sha256": "ca8ab3b48702bbbce52690b07d424d4ab244861a6487be234f0926f2968df6b1",
+        "sha256_in_prefix": "ca8ab3b48702bbbce52690b07d424d4ab244861a6487be234f0926f2968df6b1",
+        "size_in_bytes": 16118
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/regression.py",
+        "path_type": "hardlink",
+        "sha256": "a52465d2b572809105de94b09eb51ddf4ac3fb9baeb3c1e3aa01cadbc7d723a8",
+        "sha256_in_prefix": "a52465d2b572809105de94b09eb51ddf4ac3fb9baeb3c1e3aa01cadbc7d723a8",
+        "size_in_bytes": 45157
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__init__.py",
+        "path_type": "hardlink",
+        "sha256": "04b1a3e1e19e7ff7bdb37352bdc27c7be99533c0ef82b6834aa78287b7544592",
+        "sha256_in_prefix": "04b1a3e1e19e7ff7bdb37352bdc27c7be99533c0ef82b6834aa78287b7544592",
+        "size_in_bytes": 180
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/__init__.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "a86dece35ae45ba5142429026bf82eadfed7e80fc28dfca47594cdb8b66f2812",
+        "sha256_in_prefix": "a86dece35ae45ba5142429026bf82eadfed7e80fc28dfca47594cdb8b66f2812",
+        "size_in_bytes": 652
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_algorithms.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "453078c2352abe6b60ca28c7e0fd8b925e8bc605cf0422563ecc6c79e85d9cee",
+        "sha256_in_prefix": "453078c2352abe6b60ca28c7e0fd8b925e8bc605cf0422563ecc6c79e85d9cee",
+        "size_in_bytes": 7454
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_axisgrid.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "2fa4852a97dcc324ce977256938b4f6a600a5aac6294f2b9da81b831a3649843",
+        "sha256_in_prefix": "2fa4852a97dcc324ce977256938b4f6a600a5aac6294f2b9da81b831a3649843",
+        "size_in_bytes": 46663
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_categorical.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "ad9991492cb8ce0eabbb2e643e1517a759ead28449b396bbcc7d048dba7f1af3",
+        "sha256_in_prefix": "ad9991492cb8ce0eabbb2e643e1517a759ead28449b396bbcc7d048dba7f1af3",
+        "size_in_bytes": 77827
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_distributions.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "20944c7690233fd209feba83c035ea86520814d010c314642a98fe2c65ec15be",
+        "sha256_in_prefix": "20944c7690233fd209feba83c035ea86520814d010c314642a98fe2c65ec15be",
+        "size_in_bytes": 4530
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_matrix.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "3731f59c77ce8827f4f269af1d6540e4e7e86ae46d504634766c1c3e33141d37",
+        "sha256_in_prefix": "3731f59c77ce8827f4f269af1d6540e4e7e86ae46d504634766c1c3e33141d37",
+        "size_in_bytes": 39091
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_miscplot.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "83e2b7522cba334d3f1c447ebdafff1b75b82ae0bf84c5a7a398f9b60ca99853",
+        "sha256_in_prefix": "83e2b7522cba334d3f1c447ebdafff1b75b82ae0bf84c5a7a398f9b60ca99853",
+        "size_in_bytes": 1100
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_palettes.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "3672dd28ebc511235ba6434877328895329206628fd48f1ab27a5c82eb215838",
+        "sha256_in_prefix": "3672dd28ebc511235ba6434877328895329206628fd48f1ab27a5c82eb215838",
+        "size_in_bytes": 11444
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_rcmod.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "78a3311895336c54a69c3b835adbd502fd419d6a6885269e36bd07798369ad27",
+        "sha256_in_prefix": "78a3311895336c54a69c3b835adbd502fd419d6a6885269e36bd07798369ad27",
+        "size_in_bytes": 8246
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_regression.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "a06f255fe0bdbdec2fa8b8de6f201857ee0011f785530d871f6065f885cde85d",
+        "sha256_in_prefix": "a06f255fe0bdbdec2fa8b8de6f201857ee0011f785530d871f6065f885cde85d",
+        "size_in_bytes": 20264
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/__pycache__/test_utils.cpython-37.pyc",
+        "path_type": "hardlink",
+        "sha256": "590b66ecbf913f0109d93025e06af8f183e1e5cc60cca6aa5027a530fd383449",
+        "sha256_in_prefix": "590b66ecbf913f0109d93025e06af8f183e1e5cc60cca6aa5027a530fd383449",
+        "size_in_bytes": 11147
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_algorithms.py",
+        "path_type": "hardlink",
+        "sha256": "3c9024b438da3d2e3733d01e10fbeae9c52b8f7b5439ab1d09fa0b5ed7925da2",
+        "sha256_in_prefix": "3c9024b438da3d2e3733d01e10fbeae9c52b8f7b5439ab1d09fa0b5ed7925da2",
+        "size_in_bytes": 6607
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_axisgrid.py",
+        "path_type": "hardlink",
+        "sha256": "c202f8a345877b1772254d85cefd5b1366ec2f6f1f37863544663fddaf464aad",
+        "sha256_in_prefix": "c202f8a345877b1772254d85cefd5b1366ec2f6f1f37863544663fddaf464aad",
+        "size_in_bytes": 51486
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_categorical.py",
+        "path_type": "hardlink",
+        "sha256": "ad5ab88135404feb2d434f8d50195bf1859488eda926fe7c7499f9b454c375a4",
+        "sha256_in_prefix": "ad5ab88135404feb2d434f8d50195bf1859488eda926fe7c7499f9b454c375a4",
+        "size_in_bytes": 93479
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_distributions.py",
+        "path_type": "hardlink",
+        "sha256": "12981edf9b55a030f8ff742c63e0ae497f36c74b0be4eadc903102b4d42f176f",
+        "sha256_in_prefix": "12981edf9b55a030f8ff742c63e0ae497f36c74b0be4eadc903102b4d42f176f",
+        "size_in_bytes": 4986
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_matrix.py",
+        "path_type": "hardlink",
+        "sha256": "27942c48aa1dc61ae96463226e57ce78d1dbf3247eff5f40b9d1dbee951c25dc",
+        "sha256_in_prefix": "27942c48aa1dc61ae96463226e57ce78d1dbf3247eff5f40b9d1dbee951c25dc",
+        "size_in_bytes": 40896
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_miscplot.py",
+        "path_type": "hardlink",
+        "sha256": "cc84d76167d9c7d62feb67c66e83b969dc8c3a88feda19e027c73dcb4f980563",
+        "sha256_in_prefix": "cc84d76167d9c7d62feb67c66e83b969dc8c3a88feda19e027c73dcb4f980563",
+        "size_in_bytes": 792
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_palettes.py",
+        "path_type": "hardlink",
+        "sha256": "2dcdcf99fc2400f2130fd94216f82a55f173edfda12e536560ad712fc113d988",
+        "sha256_in_prefix": "2dcdcf99fc2400f2130fd94216f82a55f173edfda12e536560ad712fc113d988",
+        "size_in_bytes": 9884
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_rcmod.py",
+        "path_type": "hardlink",
+        "sha256": "2fb0a1aa3bb98aca6420ee7eced3e64fdbdec1ec73a6d74247f5ae8d916eb4bf",
+        "sha256_in_prefix": "2fb0a1aa3bb98aca6420ee7eced3e64fdbdec1ec73a6d74247f5ae8d916eb4bf",
+        "size_in_bytes": 7369
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_regression.py",
+        "path_type": "hardlink",
+        "sha256": "c577d224610a799bfdc10d0a76e758ab4a2c900c56cf4559406b0e7da1ab0369",
+        "sha256_in_prefix": "c577d224610a799bfdc10d0a76e758ab4a2c900c56cf4559406b0e7da1ab0369",
+        "size_in_bytes": 19606
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/tests/test_utils.py",
+        "path_type": "hardlink",
+        "sha256": "9d04fd1bbd8c67c613e30456d86eb9930496f7fea5f54cac344bad1f64b21d8d",
+        "sha256_in_prefix": "9d04fd1bbd8c67c613e30456d86eb9930496f7fea5f54cac344bad1f64b21d8d",
+        "size_in_bytes": 11508
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/timeseries.py",
+        "path_type": "hardlink",
+        "sha256": "cb6f99957977ca7e9c658e78290d4b8eaccdeb54274f3496d961976f9c7688bd",
+        "sha256_in_prefix": "cb6f99957977ca7e9c658e78290d4b8eaccdeb54274f3496d961976f9c7688bd",
+        "size_in_bytes": 16038
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/utils.py",
+        "path_type": "hardlink",
+        "sha256": "f3a692425bac84e33d1d8c1440f139574e901448d1b5fd3ce73f7a5bbac75f58",
+        "sha256_in_prefix": "f3a692425bac84e33d1d8c1440f139574e901448d1b5fd3ce73f7a5bbac75f58",
+        "size_in_bytes": 18375
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/widgets.py",
+        "path_type": "hardlink",
+        "sha256": "912b104cff09b0f5a84d91bfbe307d2f423645c3a22c7bd00608ae5cc769ee19",
+        "sha256_in_prefix": "912b104cff09b0f5a84d91bfbe307d2f423645c3a22c7bd00608ae5cc769ee19",
+        "size_in_bytes": 15316
+      },
+      {
+        "_path": "lib/python3.7/site-packages/seaborn/xkcd_rgb.py",
+        "path_type": "hardlink",
+        "sha256": "f80792af1c27aed0e7f865961aef11400e759d75a01f02a65a89635501403f2a",
+        "sha256_in_prefix": "f80792af1c27aed0e7f865961aef11400e759d75a01f02a65a89635501403f2a",
+        "size_in_bytes": 35379
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "seaborn=0.8",
+  "sha256": "83cdee1e08f6e6cc96f6e17b4bd0a58dcb5caf79c5729860f9dd5ba4246d41b8",
+  "size": 328367,
+  "subdir": "linux-64",
+  "timestamp": 1530960965199,
+  "track_features": "",
+  "url": "https://repo.anaconda.com/pkgs/main/linux-64/seaborn-0.8.1-py37_0.conda",
+  "version": "0.8.1"
+}

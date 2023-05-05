@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /scratch/anw/tabroeders/Full_Processing_Pipeline_luna/files/python-environment/bin/python -m PyQt5.uic.pyuic ${1+"$@"}

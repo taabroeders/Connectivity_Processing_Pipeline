@@ -1,0 +1,14 @@
+prefix=/scratch/anw/tabroeders/Full_Processing_Pipeline_luna/files/python-environment
+exec_prefix=/scratch/anw/tabroeders/Full_Processing_Pipeline_luna/files/python-environment
+libdir=/scratch/anw/tabroeders/Full_Processing_Pipeline_luna/files/python-environment/lib
+includedir=/scratch/anw/tabroeders/Full_Processing_Pipeline_luna/files/python-environment/include
+
+Name: FreeType 2
+URL: https://freetype.org
+Description: A free, high-quality, and portable font engine.
+Version: 24.3.18
+Requires: 
+Requires.private: zlib, libpng
+Libs: -L/scratch/anw/tabroeders/Full_Processing_Pipeline_luna/files/python-environment/lib -lfreetype
+Libs.private: 
+Cflags: -I${includedir}/freetype2
