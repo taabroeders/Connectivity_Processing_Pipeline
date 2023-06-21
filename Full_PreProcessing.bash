@@ -308,7 +308,7 @@ if [ -f ${output_folder}/dwi/${FULLID_folder}/atlas/BNA_Atlas_FA.csv ]; then
 else
   echo "Starting processing of diffusion weighted data..."
   echo "  Starting diffusion preprocessing..." &&\
-  sbatch --wait ${scriptfolder}/steps/dwi_preproc.bash ${input_folder} ${FULLID_file} ${FULLID_folder} &&\
+  sbatch --wait ${scriptfolder}/steps/dwi_preproc.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} &&\
   echo "  Starting diffusion reconstruction..." &&\
   sbatch --wait ${scriptfolder}/steps/dwi_recon.bash ${input_folder} ${FULLID_file} ${FULLID_folder} &&\
   echo "  Transforming 5TT segmentations to dwi and create GM/WM interface..." &&\
