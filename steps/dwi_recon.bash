@@ -51,14 +51,14 @@ mkdir -p dwi/${FULLID_folder}/reconstruction
 #Diffusion tensor estimation
 dwi2tensor dwi/${FULLID_folder}/preprocessing/${FULLID_file}_preprocessed_dwi.nii.gz \
            dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_tensor.nii.gz \
-           -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_dwi_meanb0_brain_mask.nii.gz \
+           -mask dwi/${FULLID_folder}/preprocessing/b0_topup_brain_mask.nii.gz \
            -fslgrad \
-           ${INPUT_DIR}/dwi/${FULLID_FOLDER}/${FULLID_file}_dwi.bvec \
-           ${INPUT_DIR}/dwi/${FULLID_FOLDER}/${FULLID_file}_dwi.bval &&\
+           ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bvec \
+           ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bval &&\
 
 #Generate maps of tensor-derived parameters
 tensor2metric dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_tensor.nii.gz \
-              -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_dwi_meanb0_brain_mask.nii.gz \
+              -mask dwi/${FULLID_folder}/preprocessing/b0_topup_brain_mask.nii.gz \
               -adc dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_MD.nii.gz \
               -fa dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_FA.nii.gz \
               -ad dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_AD.nii.gz \

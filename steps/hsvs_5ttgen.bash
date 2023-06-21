@@ -77,6 +77,9 @@ mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/all_segmentations/first_all_non
             --no-save-reg --nearest &&\
 
 #transform cerebellum segmentation to anat-space
+mrconvert anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.mif \
+          anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.nii.gz &&\
+
 mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.mif \
             --targ ${anatomical} --regheader \
             --o anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_cerebellum_anat.nii.gz \

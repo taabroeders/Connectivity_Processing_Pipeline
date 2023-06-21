@@ -53,8 +53,8 @@ mkdir -p dwi/${FULLID_folder}/tractography/tracts &&\
 mrconvert  dwi/${FULLID_folder}/preprocessing/${FULLID_file}_preprocessed_dwi.nii.gz \
            dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_preprocessed_dwi.mif \
            -fslgrad \
-           ${INPUT_DIR}/dwi/${FULLID_FOLDER}/${FULLID_file}_dwi.bvec \
-           ${INPUT_DIR}/dwi/${FULLID_FOLDER}/${FULLID_file}_dwi.bval &&\
+           ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bvec \
+           ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bval &&\
 
 #Estimate response function(s) for spherical deconvolution
 dwi2response dhollander dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_preprocessed_dwi.mif \
@@ -62,8 +62,8 @@ dwi2response dhollander dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_
              dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_gm.txt \
              dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_csf.txt \
              -fslgrad \
-             ${INPUT_DIR}/dwi/${FULLID_FOLDER}/${FULLID_file}_dwi.bvec \
-             ${INPUT_DIR}/dwi/${FULLID_FOLDER}/${FULLID_file}_dwi.bval &&\
+             ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bvec \
+             ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bval &&\
 
 #Single-shell 3-tissue constrianed spherical deconvolution
 source activate ${FILEDIR}/preproc_env &&\
@@ -77,7 +77,7 @@ ss3t_csd_beta1 dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_preproces
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_gmFOD.nii.gz \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_csf.txt \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_csfFOD.nii.gz \
-               -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_dwi_meanb0_brain_mask.nii.gz &&\
+               -mask dwi/${FULLID_folder}/preprocessing/b0_topup_brain_mask.nii.gz &&\
 
 conda deactivate &&\
 

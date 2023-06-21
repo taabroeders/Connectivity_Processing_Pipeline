@@ -58,7 +58,7 @@ fslroi anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz
        dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_5tthsvs_anat_vol0.nii.gz \
        0 1 &&\
 
-flirt -in dwi/${FULLID_folder}/preprocessing/${FULLID_file}_dwi_meanb0_brain.nii.gz \
+flirt -in dwi/${FULLID_folder}/preprocessing/b0_topup_brain.nii.gz \
       -ref dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_5tthsvs_anat_vol0.nii.gz \
       -interp nearestneighbour \
       -dof 6 \
@@ -69,7 +69,7 @@ convert_xfm -omat dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_RigidTrans_an
 
 #Apply to 5TT file
 echo "  Bringing 5tt file in dwi space..." &&\
-flirt -ref dwi/${FULLID_folder}/preprocessing/${FULLID_file}_dwi_meanb0_brain.nii.gz \
+flirt -ref dwi/${FULLID_folder}/preprocessing/b0_topup_brain.nii.gz \
       -in anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz \
       -out dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_5tthsvs_dwi_lesions.nii.gz \
       -applyxfm -init dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_RigidTrans_anat2dwi.mat &&\
@@ -83,21 +83,23 @@ printf "\n#### Done! ####\n"
 #Code for ANTs registration
 
 # antsRegistrationSyN.sh -d 3 \
-#                        -f ${anatomical_brain} \
-#                        -m ${dwi_b0_brain} \
+#                        -f anat/${FULLID_folder}/${FULLID_file}_T1w_brain.nii.gz \
+#                        -m dwi/${FULLID_folder}/preprocessing/b0_topup_brain.nii.gz \
 #                        -ta \
 #                        -o dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_InitTrans_dwi2anat_ &&\
-# export PATH=$PATH:${FILEDIR} &&\
-# ${FILEDIR}/antsRegistration_affine_SyN.sh --moving-mask ${dwi_b0_brain_mask} \
-#                                           --fixed-mask ${anatomical_brain_mask} \
+
+# ${FILEDIR}/antsRegistration_affine_SyN.sh --moving-mask dwi/${FULLID_folder}/preprocessing/b0_topup_brain_mask.nii.gz \
+#                                           --fixed-mask anat/${FULLID_folder}/${FULLID_file}_T1w_brain_mask.nii.gz \
 #                                           --initial-transform dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_InitTrans_dwi2anat_0GenericAffine.mat \
 #                                           --skip-linear \
 #                                           -o dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat.nii.gz \
-#                                           ${dwi_b0_brain} ${anatomical_brain} \
+#                                           dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/output/b0_all_topup_vol0.nii.gz\
+# 					              anat/${FULLID_folder}/${FULLID_file}_T1w_noneck.nii.gz \
 #                                           dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat_ &&\
-# antsApplyTransforms -i anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz \
-#                     -r ${dwi_b0_brain} \
-#                     -o dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_5tthsvs_dwi_lesions.nii.gz \
-#                     -t [dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_InitTrans_dwi2anat_0GenericAffine.mat,1] \
-#                     -t dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat_1InverseWarp.nii.gz \
-#                     -d 4 &&\
+
+antsApplyTransforms -i anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz \
+                    -r dwi/${FULLID_folder}/preprocessing/b0_topup_brain.nii.gz \
+                    -o dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_5tthsvs_dwi_lesions_ANTS.nii.gz \
+                    -t [dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_InitTrans_dwi2anat_0GenericAffine.mat,1] \
+                    -t dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat_1InverseWarp.nii.gz \
+                    -d 3 -e 3 --verbose &&\

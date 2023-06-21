@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --job-name=TempFilterFunc     #a convenient name for your job
-#SBATCH --mem=3                       #max memory per node
+#SBATCH --mem=3G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
-#SBATCH --cpus-per-task=1      	      #max CPU cores per process
+#SBATCH --cpus-per-task=1      	  #max CPU cores per process
 #SBATCH --time=0:15:00                #time limit (H:MM:SS)
 #SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
