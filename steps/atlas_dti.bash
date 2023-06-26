@@ -53,20 +53,14 @@ mkdir -p dwi/${FULLID_folder}/tractography/atlas &&\
 echo "Computing structural connectivity matrices..." &&\
 
 #Apply anat-to-dwi transormation to atlas file
-echo "  Bringing 5tt file in dwi space" &&\
-# antsApplyTransforms -d 3 \
-#                     -i anat/${FULLID_folder}/atlas/BNA2highres_FIRST.nii.gz \
-#                     -r dwi/${FULLID_folder}/preprocessing/${FULLID_file}_preprocessed_dwi.nii.gz \
-#                     -o dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
-#                     -n NearestNeighbor \
-#                     -t dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_anat2dwi_0GenericAffine.mat &&\
-
-flirt -ref dwi/${FULLID_folder}/preprocessing/${FULLID_file}_dwi_meanb0_brain.nii.gz \
-      -in anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz \
-      -out dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
-      -applyxfm -init dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_RigidTrans_anat2dwi.mat \
-      -interp nearestneighbour &&\
-
+echo "  Bringing atlas file in dwi space" &&\
+antsApplyTransforms -i anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz \
+                    -r dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_vol0.nii.gz \
+                    -o dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
+                    -t [dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_InitTrans_dwi2anat_0GenericAffine.mat,1] \
+                    -t dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat_1InverseWarp.nii.gz \
+                    -n NearestNeighbor -d 3 -e 3 --verbose &&\
+                    
 echo "  Computing connectivity matrices" &&\
 
 # compute matrix (edges are sum of streamline weights)

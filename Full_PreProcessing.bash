@@ -6,14 +6,11 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 04 04 2023
+#updated: 21 06 2023
 #status: still being developed
-#to-do: 1. Include HD-bet segmentation
-#       2. Improve flexibility for steps being run outstide pipeline (e.g. Brain extraction)
-#       3. Improve BIDS derivatives format "KNW-Connect"? (https://bids-specification.readthedocs.io/en/stable/05-derivatives/03-imaging.html)
-#       4. Allow freesurfer folder as variable instead of copying/ symbolic link?
-#       5. ICA-AROMA via docker
-#       6. Incorporate WM segmentations into 5tt file
+#to-do: 1. Include option for different brain extraction
+#       2. Improve BIDS derivatives format "KNW-Connect"? (https://bids-specification.readthedocs.io/en/stable/05-derivatives/03-imaging.html)
+#       3. Allow freesurfer folder as variable instead of copying/ symbolic link?
 
 #Review History
 #Reviewed by -
@@ -38,6 +35,7 @@ Optional arguments:
   --remove_vols [or --remove-vols] <n>               remove first <n> volumes (func. preprocessing) default=0
   --freesurfer <freesufer-folder>                    use output folder of previous freesurfer run (anat. prepocessing)
   --lesion-mask <lesion-mask>                        use lesion mask (t1 space) (diff. pipeline) default=[no lesions]
+  --dwi_fieldmap
 Flags:
   -a perform anatomical preprocessing
   -f perform functional preprocessing
@@ -110,6 +108,7 @@ input_folder='' #input folder
 output_folder='' #output folder
 freesurfer_input='' #location of freesurfer input
 lesionmask='' #location of lesion mask
+dwi_fieldmap='' #location of fieldmap
 remove_vols=0 #remove #n dummy volumes for functional preprocessing
 SUBID='' #subject identifier
 SESID='' #session identifier
@@ -126,6 +125,7 @@ while [ $# -gt 0 ] ; do
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
     --lesion-mask) lesionmask=$(realpath "$2"); shift ;;
+    --dwi_fieldmap) dwi_fieldmap=$(realpath "$2"); shift ;;
     -h|-\?|--help) print_usage ;;
     -?*) printf 'ERROR: Unknown option %s\n\n' "$1"; print_help ;;
     *) break ;;
@@ -308,11 +308,11 @@ if [ -f ${output_folder}/dwi/${FULLID_folder}/atlas/BNA_Atlas_FA.csv ]; then
 else
   echo "Starting processing of diffusion weighted data..."
   echo "  Starting diffusion preprocessing..." &&\
-  sbatch --wait ${scriptfolder}/steps/dwi_preproc.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} &&\
+  sbatch --wait ${scriptfolder}/steps/dwi_preproc.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${dwi_fieldmap} &&\
   echo "  Starting diffusion reconstruction..." &&\
   sbatch --wait ${scriptfolder}/steps/dwi_recon.bash ${input_folder} ${FULLID_file} ${FULLID_folder} &&\
   echo "  Transforming 5TT segmentations to dwi and create GM/WM interface..." &&\
-  sbatch --wait ${scriptfolder}/steps/anat_to_dwi.bash ${FULLID_file} ${FULLID_folder} ${scriptfolder}
+  sbatch --wait ${scriptfolder}/steps/anat_to_dwi.bash ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
   echo "  Performing tractography and SIFT filtering..." &&\
   sbatch --wait ${scriptfolder}/steps/tractography.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
   echo "  Computing structural connectivity matrices..." &&\

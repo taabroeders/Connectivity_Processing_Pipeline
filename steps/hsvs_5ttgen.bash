@@ -3,7 +3,7 @@
 #SBATCH --job-name=5TTgen             #a convenient name for your job
 #SBATCH --mem=3G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
-#SBATCH --cpus-per-task=2      	   #max CPU cores per process
+#SBATCH --cpus-per-task=2      	      #max CPU cores per process
 #SBATCH --time=0:30:00                #time limit (H:MM:SS)
 #SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
@@ -53,7 +53,8 @@ mkdir -p anat/${FULLID_folder}/hsvs_5tt &&\
 #perform hybrid (FSL+freesurfer) tissue-type segmentation
 echo "Performing 5TT segmentations..." &&\
 5ttgen hsvs ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz \
-       -white_stem -nocrop -nocleanup -scratch anat/${FULLID_folder}/hsvs_5tt/all_segmentations &&\
+       -white_stem -nocrop -nocleanup -scratch anat/${FULLID_folder}/hsvs_5tt/all_segmentations \
+       -hippocampi first -thalami first &&\
 
 #moving segmentations from freesurfer to native anatomical space
 mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz \
@@ -61,10 +62,15 @@ mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurf
             --o anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat.nii.gz \
             --no-save-reg --nearest &&\
 
-#setting pathological tissue to lesion mask
+#setting pathological tissue to lesion mask if lesion mask provided
+if [ ! -z ${lesionmask} ]; then
 5ttedit -path ${lesionmask} \
         anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat.nii.gz \
-        anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz &&\
+        anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz
+else
+ln -s ${FULLID_file}_5tthsvs_anat.nii.gz \
+      anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz
+fi &&\
 
 #move 5tt file in freesurfer-space to 5ttgen folder for overview
 mv anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz \
@@ -80,7 +86,7 @@ mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/all_segmentations/first_all_non
 mrconvert anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.mif \
           anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.nii.gz &&\
 
-mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.mif \
+mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.nii.gz \
             --targ ${anatomical} --regheader \
             --o anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_cerebellum_anat.nii.gz \
             --no-save-reg --nearest &&\

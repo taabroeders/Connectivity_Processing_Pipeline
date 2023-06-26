@@ -66,7 +66,8 @@ dwi2response dhollander dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_
              ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bval &&\
 
 #Single-shell 3-tissue constrianed spherical deconvolution
-source activate ${FILEDIR}/preproc_env &&\
+eval "$(conda shell.bash hook)" &&\
+conda activate ${FILEDIR}/preproc_env &&\
 
 export PATH=$PATH:${FILEDIR}/preproc_env/MRtrix3Tissue/bin &&\
 
@@ -77,7 +78,7 @@ ss3t_csd_beta1 dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_preproces
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_gmFOD.nii.gz \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_csf.txt \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_csfFOD.nii.gz \
-               -mask dwi/${FULLID_folder}/preprocessing/b0_topup_brain_mask.nii.gz &&\
+               -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain_mask.nii.gz &&\
 
 conda deactivate &&\
 
