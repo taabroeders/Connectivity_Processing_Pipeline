@@ -35,7 +35,6 @@ Optional arguments:
   --remove_vols [or --remove-vols] <n>               remove first <n> volumes (func. preprocessing) default=0
   --freesurfer <freesufer-folder>                    use output folder of previous freesurfer run (anat. prepocessing)
   --lesion-mask <lesion-mask>                        use lesion mask (t1 space) (diff. pipeline) default=[no lesions]
-  --dwi_fieldmap
 Flags:
   -a perform anatomical preprocessing
   -f perform functional preprocessing
@@ -108,7 +107,6 @@ input_folder='' #input folder
 output_folder='' #output folder
 freesurfer_input='' #location of freesurfer input
 lesionmask='' #location of lesion mask
-dwi_fieldmap='' #location of fieldmap
 remove_vols=0 #remove #n dummy volumes for functional preprocessing
 SUBID='' #subject identifier
 SESID='' #session identifier
@@ -125,7 +123,6 @@ while [ $# -gt 0 ] ; do
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
     --lesion-mask) lesionmask=$(realpath "$2"); shift ;;
-    --dwi_fieldmap) dwi_fieldmap=$(realpath "$2"); shift ;;
     -h|-\?|--help) print_usage ;;
     -?*) printf 'ERROR: Unknown option %s\n\n' "$1"; print_help ;;
     *) break ;;
@@ -160,12 +157,12 @@ else
 fi
 
 ##set filenames in accordance with folder structure
-anatomical_raw=${input_folder}/anat/${FULLID_file}_T1w.nii.gz
+anatomical_raw=${input_folder}/anat/${FULLID_file}*_T1w.nii.gz
 anatomical_noneck=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_noneck.nii.gz
 anatomical_brain=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_brain.nii.gz
 anatomical_brain_mask=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_brain_mask.nii.gz
-fmri=${input_folder}/func/${FULLID_file}_task-rest_bold.nii.gz
-dwi=${input_folder}/dwi/${FULLID_file}_dwi.nii.gz
+fmri=${input_folder}/func/${FULLID_file}*_task-rest*_bold.nii.gz
+dwi=${input_folder}/dwi/${FULLID_file}*_dwi.nii.gz
 scriptfolder=$(dirname $(realpath $0))
 
 # Check if all required files are available
@@ -308,7 +305,7 @@ if [ -f ${output_folder}/dwi/${FULLID_folder}/atlas/BNA_Atlas_FA.csv ]; then
 else
   echo "Starting processing of diffusion weighted data..."
   echo "  Starting diffusion preprocessing..." &&\
-  sbatch --wait ${scriptfolder}/steps/dwi_preproc.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${dwi_fieldmap} &&\
+  sbatch --wait ${scriptfolder}/steps/dwi_preproc.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} &&\
   echo "  Starting diffusion reconstruction..." &&\
   sbatch --wait ${scriptfolder}/steps/dwi_recon.bash ${input_folder} ${FULLID_file} ${FULLID_folder} &&\
   echo "  Transforming 5TT segmentations to dwi and create GM/WM interface..." &&\

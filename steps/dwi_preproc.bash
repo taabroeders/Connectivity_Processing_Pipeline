@@ -35,7 +35,6 @@ INPUT_DIR=$(realpath $1)
 FULLID_file=$2
 FULLID_folder=$3
 anatomical_brain=$(realpath $4)
-dwi_fieldmap=$5
 
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
@@ -73,7 +72,30 @@ elif [ ${PE} == "k" ];then PE_FSL="0 0 1"
 elif [ ${PE} == "-k" ];then PE_FSL="0 0 -1"
 fi
 
-if [ -z ${dwi_fieldmap} ]; then
+#----------------------------------------------------------------------
+#                           Check for fieldmaps
+#----------------------------------------------------------------------
+
+b0pair_samePE=()
+b0pair_otherPE=()
+if [ -d ${INPUT_DIR}/b0pair ];then
+for b0pair_json in ${INPUT_DIR}/b0pair/*.json; do
+       if [ dwi == $(cat ${b0pair_json} | grep '"IntendedFor"' | cut -d'"' -f4 | cut -d/ -f 1) ]; then
+              b0pair_nii=${b0pair_json%%.json}.nii.gz
+              b0pair_PE=$(cat ${b0pair_json} | grep '"PhaseEncodingDirection"' | awk -F" " '{print $2}' | sed 's/"//g' | sed 's/,//g')
+              if [ -f ${b0pair_nii} ];then
+                     if [ "${b0pair_PE}" == "${PE}" ];then
+                            b0pair_samePE+=("${b0pair_nii}")
+                     else
+                            b0pair_otherPE+=("${b0pair_nii}")
+                     fi
+              fi
+       fi
+done
+
+fi
+
+if [ -z ${b0pair_samePE} ] || [ -z ${b0pair_otherPE} ]; then
 #----------------------------------------------------------------------
 #                  Fieldmap-free distortion correction
 #----------------------------------------------------------------------
@@ -131,13 +153,16 @@ else
 #                  Fieldmap-based distortion correction
 #----------------------------------------------------------------------
 
+#Create one b0pair file of b0s with opposite phase encoding directions
+mrcat ${b0pair_samePE} ${b0pair_otherPE} dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_pair.nii.gz -axis 3 &&\
+
 dwifslpreproc dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.nii.gz \
               dwi/${FULLID_folder}/preprocessing/${FULLID_file}_eddy_unwarped_dwi.nii.gz \
               -fslgrad \
               ${INPUT_DIR}/${FULLID_FOLDER}/dwi/${FULLID_file}_dwi.bvec \
               ${INPUT_DIR}/${FULLID_FOLDER}/dwi/${FULLID_file}_dwi.bval \
               -rpe_pair \
-              -se_epi ${dwi_fieldmap} \
+              -se_epi dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_pair.nii.gz \
               -align_seepi \
               -eddy_options " --slm=linear " \
               -pe_dir ${PE} \

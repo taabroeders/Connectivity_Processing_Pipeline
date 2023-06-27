@@ -69,7 +69,7 @@ dwi2response dhollander dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_
 eval "$(conda shell.bash hook)" &&\
 conda activate ${FILEDIR}/preproc_env &&\
 
-export PATH=$PATH:${FILEDIR}/preproc_env/MRtrix3Tissue/bin &&\
+export PATH=$PATH:${FILEDIR}/MRtrix3Tissue/bin &&\
 
 ss3t_csd_beta1 dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_preprocessed_dwi.mif \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_wm.txt \
