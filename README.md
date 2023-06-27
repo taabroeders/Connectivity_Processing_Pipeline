@@ -1,6 +1,6 @@
 # Connectivity Processing pipeline
 
-## HOW TO USE:
+## How to use:
 `bash Full_preProcessing.bash -i <input_folder> -o <output_folder> [options/flags]`
 <br/><br/>
 ### Required arguments:
@@ -19,7 +19,7 @@
   `-d` perform diffusion preprocessing<br/>
   If no flags are provided, all steps will be performed.
 <br/><br/>
-## Important! A BIDS folder structure is required for the input-folder:
+## A BIDS folder structure is required for the input-folder:
 
 ```
 sub-<subject#>                 <-- This is the <input-folder>
@@ -33,7 +33,7 @@ sub-<subject#>                 <-- This is the <input-folder>
       sub-<subject#>[_ses-<session#>]_dwi.bval
       sub-<subject#>[_ses-<session#>]_dwi.bvec
 ```
-<br/>
+<br/><br/>
 
 ## Before the first run
 ### Make sure the following variables are correctly set:
@@ -41,7 +41,6 @@ sub-<subject#>                 <-- This is the <input-folder>
   - `export FREESURFER_HOME=/path/to/freesurferx.x.x; export PATH=${FREESURFER_HOME}/bin:${PATH}`
   - `export ANTSPATH=/path/to/ANTS/install/bin; export PATH=${ANTSPATH}:${PATH}`
   - `export MRTRIX_DIR=/path/to/MRtrix; export PATH=${MRTRIX_DIR}:${PATH}`
-  <br/>
 
 ### Run the initialisation script
 `bash init.bash` 
