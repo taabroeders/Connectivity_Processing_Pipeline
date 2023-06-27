@@ -35,6 +35,7 @@ INPUT_DIR=$(realpath $1)
 FULLID_file=$2
 FULLID_folder=$3
 anatomical_brain=$(realpath $4)
+FILEDIR=$5/files
 
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
@@ -109,19 +110,18 @@ fslroi dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.n
        0 1 &&\
 
 #Use brain-extracted T1
-cp ${anatomical_brain} dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/input/T1.nii.gz
+cp ${anatomical_brain} dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/input/T1.nii.gz &&\
 
 echo ${PE_FSL} ${RT} >> dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/input/acqparams.txt &&\
 echo ${PE_FSL} 0.00 >> dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/input/acqparams.txt &&\
 
-#Run Synb0-DISCO for fieldmap-lesss distortion correction
+#Run Synb0-DISCO for fieldmap-free distortion correction
 singularity run -e -B dwi/${FULLID_folder}/preprocessing/Synb0_DISCO:/tmp \
             -B dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/input:/INPUTS \
             -B dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/output:/OUTPUTS \
             -B $FREESURFER_HOME/license.txt:/extra/freesurfer/license.txt \
-             /scratch/anw/ikoubiyr/Softs/synb0-disco.sif \
-             --stripped &&\ 
-             ##^UPDATE THIS
+             ${FILEDIR}/singularity/synb0-disco.sif \
+             --stripped &&\
 
 NVOLS=$(fslval dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.nii.gz dim4)
 indx="";for ((i=1; i<=${NVOLS}; i+=1)); do indx="$indx 1";done;echo $indx > dwi/${FULLID_folder}/preprocessing/${FULLID_file}_index.txt

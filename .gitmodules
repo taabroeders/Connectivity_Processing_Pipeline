@@ -1,4 +1,4 @@
-[submodule "files/preproc_env/MRtrix3Tissue"]
+[submodule "files/MRtrix3Tissue"]
 	path = files/MRtrix3Tissue
 	url = https://github.com/3Tissue/MRtrix3Tissue
 [submodule "files/ICA-AROMA"]
