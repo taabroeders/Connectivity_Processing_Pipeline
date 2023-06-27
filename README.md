@@ -35,19 +35,17 @@ sub-<subject#>                 <-- This is the <input-folder>
 ```
 <br/>
 
-## Make sure the following variables are correctly set:
+## Before the first run
+### Make sure the following variables are correctly set:
   - `export FSL_DIR=/path/to/fsl-x.x.x; export PATH=${FSL_DIR}/bin:${PATH}`
   - `export FREESURFER_HOME=/path/to/freesurferx.x.x; export PATH=${FREESURFER_HOME}/bin:${PATH}`
   - `export ANTSPATH=/path/to/ANTS/install/bin; export PATH=${ANTSPATH}:${PATH}`
   - `export MRTRIX_DIR=/path/to/MRtrix; export PATH=${MRTRIX_DIR}:${PATH}`
-  <br/><br/>
+  <br/>
 
-## The singularity files need to be downloaded beforehand
-### For functional processing:
-`singularity pull files/singularity/synbold-disco.sif docker://ytzero/synbold-disco:v1.4`
-### For diffusion processing:
-`singularity pull files/singularity/synb0-disco.sif docker://leonyichencai/synb0-disco:v3.0`
-<br/><br/>
+### Run the initialisation script
+`bash init.bash` 
+ <br/><br/>
 
 ## Example Usage:
 ### Anatomical processing:
