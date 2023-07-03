@@ -37,6 +37,10 @@ FULLID_file=$2
 FULLID_folder=$3
 FILEDIR=$4/files
 
+dwi_nii=${INPUT_DIR}/dwi/${FULLID_file}*_dwi.nii.gz
+dwi_bval=${dwi_nii%%.nii.gz}.bval
+dwi_bvec=${dwi_nii%%.nii.gz}.bvec
+
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
 
@@ -53,8 +57,8 @@ mkdir -p dwi/${FULLID_folder}/tractography/tracts &&\
 mrconvert  dwi/${FULLID_folder}/preprocessing/${FULLID_file}_preprocessed_dwi.nii.gz \
            dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_preprocessed_dwi.mif \
            -fslgrad \
-           ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bvec \
-           ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bval &&\
+           ${dwi_bvec} \
+           ${dwi_bval} &&\
 
 #Estimate response function(s) for spherical deconvolution
 dwi2response dhollander dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_preprocessed_dwi.mif \
@@ -62,8 +66,8 @@ dwi2response dhollander dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_
              dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_gm.txt \
              dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_csf.txt \
              -fslgrad \
-             ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bvec \
-             ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bval &&\
+             ${dwi_bvec} \
+             ${dwi_bval} &&\
 
 #Single-shell 3-tissue constrianed spherical deconvolution
 eval "$(conda shell.bash hook)" &&\

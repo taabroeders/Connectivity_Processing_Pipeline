@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=Atlas2Anat         #a convenient name for your job
-#SBATCH --mem=2G                      #max memory per node
+#SBATCH --mem=8G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	      #max CPU cores per process
 #SBATCH --time=0:30:00                #time limit (H:MM:SS)
@@ -60,7 +60,6 @@ fslmaths anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_t1.nii.gz -dilD 
          anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_t1_dil_GMmasked.nii.gz &&\
 
 ##add cerebellum and subcortical segmentations to transformed atlas
-echo "  Adding cerebellum and subcortical segmentations..." &&\
 
 #create cerebellum mask
 fslmaths anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_cerebellum_anat.nii.gz -bin \

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=ClipNeck           #a convenient name for your job
-#SBATCH --mem=150                     #max memory per node
+#SBATCH --mem=1G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	      #max CPU cores per process
 #SBATCH --time=0:30:00                #time limit (H:MM:SS)

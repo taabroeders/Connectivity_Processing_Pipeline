@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#SBATCH --job-name=Atlas2FS             #a convenient name for your job
-#SBATCH --mem=1G                      #max memory per node
+#SBATCH --job-name=Atlas2FS           #a convenient name for your job
+#SBATCH --mem=3G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	      #max CPU cores per process
 #SBATCH --time=0:05:00                #time limit (H:MM:SS)

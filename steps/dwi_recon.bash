@@ -36,6 +36,10 @@ INPUT_DIR=$(realpath $1)
 FULLID_file=$2
 FULLID_folder=$3
 
+dwi_nii=${INPUT_DIR}/dwi/${FULLID_file}*_dwi.nii.gz
+dwi_bval=${dwi_nii%%.nii.gz}.bval
+dwi_bvec=${dwi_nii%%.nii.gz}.bvec
+
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
 
@@ -53,8 +57,8 @@ dwi2tensor dwi/${FULLID_folder}/preprocessing/${FULLID_file}_preprocessed_dwi.ni
            dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_tensor.nii.gz \
            -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain_mask.nii.gz \
            -fslgrad \
-           ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bvec \
-           ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bval &&\
+           ${dwi_bvec} \
+           ${dwi_bval} &&\
 
 #Generate maps of tensor-derived parameters
 tensor2metric dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_tensor.nii.gz \

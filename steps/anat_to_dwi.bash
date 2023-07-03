@@ -3,8 +3,8 @@
 #SBATCH --job-name=anat2dwi           #a convenient name for your job
 #SBATCH --mem=40G                     #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
-#SBATCH --cpus-per-task=8      	  #max CPU cores per process
-#SBATCH --time=4:00:00                #time limit (H:MM:SS)
+#SBATCH --cpus-per-task=6      	      #max CPU cores per process
+#SBATCH --time=6:00:00                #time limit (H:MM:SS)
 #SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
@@ -54,6 +54,7 @@ echo "Transforming segmentations to diffusion weighted data and creating the GM/
           
 #Rigid anat-to-dwi registration with ANTs
 echo "  Registering anat to dwi space..." &&\
+export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=$SLURM_CPUS_PER_TASK &&\
 antsRegistrationSyN.sh -d 3 \
                        -f anat/${FULLID_folder}/${FULLID_file}_T1w_brain.nii.gz \
                        -m dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain.nii.gz \
@@ -67,7 +68,7 @@ antsRegistration_affine_SyN.sh --moving-mask dwi/${FULLID_folder}/preprocessing/
                                           --initial-transform dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_InitTrans_dwi2anat_0GenericAffine.mat \
                                           --skip-linear \
                                           -o dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat.nii.gz \
-                                          dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_vol0.nii.gz\
+                                          dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_vol0.nii.gz \
 					                      anat/${FULLID_folder}/${FULLID_file}_T1w_noneck.nii.gz \
                                           dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat_ &&\
 #Apply to 5TT file

@@ -37,6 +37,11 @@ FULLID_folder=$3
 anatomical_brain=$(realpath $4)
 FILEDIR=$5/files
 
+dwi_nii=${INPUT_DIR}/dwi/${FULLID_file}*_dwi.nii.gz
+dwi_json=${dwi_nii%%.nii.gz}.json
+dwi_bval=${dwi_nii%%.nii.gz}.bval
+dwi_bvec=${dwi_nii%%.nii.gz}.bvec
+
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
 
@@ -54,7 +59,7 @@ mkdir -p dwi/${FULLID_folder}/preprocessing
 #----------------------------------------------------------------------
 
 #dMRI noise level estimation and denoising using Marchenko-Pastur PCA
-dwidenoise ${INPUT_DIR}/dwi/${FULLID_file}_dwi.nii.gz \
+dwidenoise ${dwi_nii} \
            dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_dwi.nii.gz &&\
 
 #Remove Gibbs Ringing Artifacts
@@ -62,8 +67,8 @@ mrdegibbs dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_dwi.nii.gz 
           dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.nii.gz &&\
 
 #Determine Phase-Encoding Direction and Readout Time and create acquisition parameters file
-PE=$(cat ${INPUT_DIR}/dwi/${FULLID_file}_dwi.json | grep '"PhaseEncodingDirection"' | awk -F" " '{print $2}' | sed 's/"//g' | sed 's/,//g')
-RT=$(cat ${INPUT_DIR}/dwi/${FULLID_file}_dwi.json | grep '"TotalReadoutTime"' | awk -F" " '{print $2}' | sed 's/"//g' | sed 's/,//g')
+PE=$(cat ${dwi_json} | grep '"PhaseEncodingDirection"' | awk -F" " '{print $2}' | sed 's/"//g' | sed 's/,//g')
+RT=$(cat ${dwi_json} | grep '"TotalReadoutTime"' | awk -F" " '{print $2}' | sed 's/"//g' | sed 's/,//g')
 
 if [ ${PE} == "i" ];then PE_FSL="1 0 0"
 elif [ ${PE} == "-i" ];then PE_FSL="-1 0 0"
@@ -79,8 +84,8 @@ fi
 
 b0pair_samePE=()
 b0pair_otherPE=()
-if [ -d ${INPUT_DIR}/b0pair ];then
-for b0pair_json in ${INPUT_DIR}/b0pair/*.json; do
+if [ -d ${INPUT_DIR}/fmap ];then
+for b0pair_json in ${INPUT_DIR}/fmap/*.json; do
        if [ dwi == $(cat ${b0pair_json} | grep '"IntendedFor"' | cut -d'"' -f4 | cut -d/ -f 1) ]; then
               b0pair_nii=${b0pair_json%%.json}.nii.gz
               b0pair_PE=$(cat ${b0pair_json} | grep '"PhaseEncodingDirection"' | awk -F" " '{print $2}' | sed 's/"//g' | sed 's/,//g')
@@ -100,6 +105,8 @@ if [ -z ${b0pair_samePE} ] || [ -z ${b0pair_otherPE} ]; then
 #----------------------------------------------------------------------
 #                  Fieldmap-free distortion correction
 #----------------------------------------------------------------------
+
+printf "Performing fieldmap-free distortion correction...\n"
 
 mkdir -p dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/input &&\
 mkdir -p dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/output &&\
@@ -141,8 +148,8 @@ eddy --imain=dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed
      --mask=dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain_mask.nii.gz \
      --acqp=dwi/${FULLID_folder}/preprocessing/${FULLID_file}_acqparams.txt \
      --index=dwi/${FULLID_folder}/preprocessing/${FULLID_file}_index.txt \
-     --bvecs=/${INPUT_DIR}/dwi/${FULLID_file}_dwi.bvec \
-     --bvals=${INPUT_DIR}/dwi/${FULLID_file}_dwi.bval \
+     --bvecs=${dwi_bvec} \
+     --bvals=${dwi_bval} \
      --topup=dwi/${FULLID_folder}/preprocessing/Synb0_DISCO/output/topup \
      --out=dwi/${FULLID_folder}/preprocessing/${FULLID_file}_eddy_unwarped_dwi \
      --verbose || exit 0
@@ -153,14 +160,16 @@ else
 #                  Fieldmap-based distortion correction
 #----------------------------------------------------------------------
 
+printf "Using fieldmaps for distortion correction...\n"
+
 #Create one b0pair file of b0s with opposite phase encoding directions
 mrcat ${b0pair_samePE} ${b0pair_otherPE} dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_pair.nii.gz -axis 3 &&\
 
 dwifslpreproc dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.nii.gz \
               dwi/${FULLID_folder}/preprocessing/${FULLID_file}_eddy_unwarped_dwi.nii.gz \
               -fslgrad \
-              ${INPUT_DIR}/${FULLID_FOLDER}/dwi/${FULLID_file}_dwi.bvec \
-              ${INPUT_DIR}/${FULLID_FOLDER}/dwi/${FULLID_file}_dwi.bval \
+              ${dwi_bvec} \
+              ${dwi_bval} \
               -rpe_pair \
               -se_epi dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_pair.nii.gz \
               -align_seepi \
@@ -189,8 +198,8 @@ dwibiascorrect ants \
                dwi/${FULLID_folder}/preprocessing/${FULLID_file}_eddy_unwarped_dwi.nii.gz \
                dwi/${FULLID_folder}/preprocessing/${FULLID_file}_eddy_unwarped_biascor_dwi.nii.gz \
                -fslgrad \
-               ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bvec \
-               ${INPUT_DIR}/dwi/${FULLID_file}_dwi.bval \
+               ${dwi_bvec} \
+               ${dwi_bval} \
                -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain_mask.nii.gz &&\
 
 #Create symbolic link with easier-to-find filename
