@@ -158,7 +158,7 @@ fi
 
 ##set filenames in accordance with folder structure
 anatomical_raw=${input_folder}/anat/${FULLID_file}*_T1w.nii.gz
-anatomical_noneck=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_noneck.nii.gz
+anatomical_noneck=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w.nii.gz
 anatomical_brain=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_brain.nii.gz
 anatomical_brain_mask=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_brain_mask.nii.gz
 fmri=${input_folder}/func/${FULLID_file}*_task-rest*_bold.nii.gz
