@@ -1,4 +1,4 @@
-name: preproc_env_test
+name: preproc_env
 channels:
   - defaults
 dependencies:
