@@ -37,14 +37,11 @@ FULLID_folder=$1
 FULLID_file=$2
 fmrifeat=func/${FULLID_folder}/fmri.feat
 
+#Check if script has already been completed
+[ -f func/${FULLID_folder}/nuisance/nuisance_timeseries ] && exit 0
+
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n" &&\
-
-#Check if script has already been completed
-if [ -f func/${FULLID_folder}/nuisance/nuisance_timeseries ];then
-echo "WARNING: This step has already been completed. Skipping..."
-exit 0
-fi
 
 #Create output folder
 mkdir -p func/${FULLID_folder}/nuisance &&\

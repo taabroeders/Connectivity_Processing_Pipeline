@@ -38,14 +38,11 @@ FULLID_folder=$3
 FULLID_file=$4
 SUBJECTS_DIR=freesurfer
 
+#Check if script has already been completed
+[ -f anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_rh.BN_Atlas.stats ] && exit 0
+
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
-
-#Check if script has already been completed
-if [ -f anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_rh.BN_Atlas.stats ];then
-echo "WARNING: This step has already been completed. Skipping..."
-exit 0
-fi
 
 #Create output folder
 mkdir -p anat/${FULLID_folder}/Atlas_to_FS &&\

@@ -44,10 +44,7 @@ outputdir=${PWD}/func/${FULLID}
 printf "####$(echo ${FULLID} | sed 's|/|: |')####\n\n"
 
 #Check if script has already been completed
-if [ -d ${outputdir}/fmri.feat ];then
-echo "WARNING: This step has already been completed. Skipping..."
-exit 0
-fi
+[ -d ${outputdir}/fmri.feat ] && exit 0
 
 printf "Determining FEAT settings...\n" &&\
 

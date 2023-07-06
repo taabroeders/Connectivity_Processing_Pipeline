@@ -35,14 +35,11 @@ anatomical_raw=$1
 anatomical_noneck=$2
 FULLID=$3
 
+#Check if script has already been completed
+[ -f ${anatomical_noneck} ] && exit 0
+
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID} | sed 's|/|: |')####\n\n"
-
-#Check if script has already been completed
-if [ -f ${anatomical_noneck} ];then
-echo "WARNING: This step has already been completed. Skipping..."
-exit 0
-fi
 
 #Clip the Neck from the T1-weighted image
 printf "Clipping neck...\n" &&\

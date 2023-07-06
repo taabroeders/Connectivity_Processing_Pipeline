@@ -36,14 +36,11 @@ anatomical=$1
 FILEDIR=$2/files
 FULLID=$3
 
+#Check if script has already been completed
+[ -d func/${FULLID}/ICA_AROMA ] && exit 0
+
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID} | sed 's|/|: |')####\n\n"
-
-#Check if script has already been completed
-if [ -d func/${FULLID}/ICA_AROMA ];then
-echo "WARNING: This step has already been completed. Skipping..."
-exit 0
-fi
 
 #for each functional scan-session
 echo "Running ICA-AROMA..." &&\

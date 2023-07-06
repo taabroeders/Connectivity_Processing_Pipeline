@@ -40,14 +40,11 @@ FULLID_folder=$5
 FULLID_file=$6
 SUBJECTS_DIR=freesurfer
 
+#Check if script has already been completed
+[ -f anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brain_anat.nii.gz ] && exit 0
+
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
-
-#Check if script has already been completed
-if [ -f anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brain_anat.nii.gz ];then
-echo "WARNING: This step has already been completed. Skipping..."
-exit 0
-fi
 
 #Create output folder
 mkdir -p anat/${FULLID_folder}/FS_to_t1 &&\
@@ -144,7 +141,7 @@ mri_vol2vol --mov ${freesurfer_folder}/mri/brainmask.mgz \
             --targ ${anatomical_noneck} \
             --regheader --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brainmask_anat.nii.gz --no-save-reg &&\
 
-
+# Copy brain extracted output 
 cp anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brain_anat.nii.gz ${anatomical_brain} &&\
 cp anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brainmask_anat.nii.gz ${anatomical_brain_mask} &&\
 

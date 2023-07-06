@@ -36,14 +36,11 @@ FULLID_file=$1
 FULLID_folder=$2
 FILEDIR=$3/files
 
+#Check if script has already been completed
+[ -f dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_gmwmi_dwi.nii.gz ] && exit 0
+
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
-
-#Check if script has already been completed
-if [ -f dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_gmwmi_dwi.nii.gz ];then
-echo "WARNING: This step has already been completed. Skipping..."
-exit 0
-fi
 
 #Create output folder
 mkdir -p dwi/${FULLID_folder}/anat2dwi/reg &&\
