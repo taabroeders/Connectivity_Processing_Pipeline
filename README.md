@@ -12,7 +12,7 @@
   `--freesurfer <freesufer-folder>`<br/>
   use output folder of previous freesurfer run (anat. prepocessing)<br/>
   `--lesion-mask <lesion-mask>`<br/>
-  use lesion mask (t1 space) (diff. pipeline) default=[no lesions]
+  use lesion mask (t1 space) (diff. pipeline) default=[no lesions]<br/>
   `--func-sdc`<br/>
   perform fieldmap-less distortion correction on the functional data (experimental)
 ### Flags:
