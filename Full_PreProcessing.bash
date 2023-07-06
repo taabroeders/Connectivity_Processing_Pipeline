@@ -43,7 +43,6 @@ Flags:
 
 Important! A BIDS folder structure is required for the input-folder:
 
-dataset_description.json
 sub-<subject#>/                                      <-- This is the <input-folder>
   ses-<session#>[optional]                           <-- If available, use this as the <input-folder>
     anat/
@@ -54,6 +53,9 @@ sub-<subject#>/                                      <-- This is the <input-fold
       sub-<subject#>[_ses-<session#>]_dwi.nii.gz
       sub-<subject#>[_ses-<session#>]_dwi.bval
       sub-<subject#>[_ses-<session#>]_dwi.bvec
+    fmap/[optional]
+      sub-<subject#>[_ses-<session#>]_dir-*_epi.nii.gz
+      sub-<subject#>[_ses-<session#>]_dir-*_epi.json
 
 Make sure the following variables are correctly set:
   - export FSL_DIR=/path/to/fsl-x.x.x; export PATH=\$FSL_DIR/bin:\$PATH
@@ -317,6 +319,16 @@ else
 fi
 
 fi
+
+#----------------------------------------------------------------------
+#                       Move log files
+#----------------------------------------------------------------------
+
+mkdir -p ${output_folder}/logs/${FULLID_folder}
+for logs in ${output_folder}/logs/*.out;do
+  sublog=$(grep -l "####$(echo ${FULLID_folder} | sed 's|/|: |')####" $(realpath ${logs}))
+  [ -z ${sublog} ] || mv ${sublog} ${output_folder}/logs/${FULLID_folder}
+done
 
 printf %"$(tput cols)"s |tr " " "#"
 printf 'Processing Completed!\n'
