@@ -296,9 +296,9 @@ fi
 #----------------------------------------------------------------------
 if [[ ${d_flag} -eq 1 ]];then
 
-printf %"$(tput cols)"s |tr " " "-"
+printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 printf 'Diffusion preprocessing\n'
-printf %"$(tput cols)"s |tr " " "-"
+printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 
 if [ ! -f ${dwi} ]; then
   printf "ERROR: Requested diffusion preprocessing, but no diffusion data found!\n\n"; print_help

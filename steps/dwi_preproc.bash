@@ -2,11 +2,12 @@
 
 #SBATCH --job-name=DWIpreproc         #a convenient name for your job
 #SBATCH --mem=30G                     #max memory per node
-#SBATCH --partition=luna-cpu-short    #using luna short queue
+#SBATCH --partition=luna-short        #using luna short queue
 #SBATCH --cpus-per-task=2       	   #max CPU cores per process
 #SBATCH --time=07:00:00               #time limit (HH:MM:SS)
 #SBATCH --nice=2000                   #allow other priority jobs to go first
-#SBATCH --qos=anw-cpu                 #use anw-cpu's
+#SBATCH --qos=anw                     #use anw-gpus
+#SBATCH --gres=gpu:1g.10gb:1
 #SBATCH --output=logs/slurm-%x.%j.out
 
 #======================================================================

@@ -66,7 +66,7 @@ antsRegistration_affine_SyN.sh --moving-mask dwi/${FULLID_folder}/preprocessing/
                                           --skip-linear \
                                           -o dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat.nii.gz \
                                           dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_vol0.nii.gz \
-					                      anat/${FULLID_folder}/${FULLID_file}_T1w_noneck.nii.gz \
+					                      anat/${FULLID_folder}/${FULLID_file}_T1w.nii.gz \
                                           dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat_ &&\
 #Apply to 5TT file
 echo "  Bringing 5tt file in dwi space..." &&\
