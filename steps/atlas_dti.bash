@@ -77,6 +77,14 @@ tck2connectome -symmetric -zero_diagonal \
                -out_assignment dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_assignment_sift2.csv &&\
 
 # compute matrix (edges are mean streamline length)
+#sift
+tck2connectome -symmetric -zero_diagonal \
+               dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2_sift.tck \
+               dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
+               dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_length_sift.csv \
+               -scale_length -stat_edge mean &&\
+
+#sift2
 tck2connectome -symmetric -zero_diagonal \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2.tck \
                dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
@@ -84,6 +92,20 @@ tck2connectome -symmetric -zero_diagonal \
                -scale_length -stat_edge mean &&\
 
 # compute matrix (edges are mean FA)
+#sift
+tcksample dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2_sift.tck \
+          dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_FA.nii.gz \
+          dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_meanFAweights_sift.csv \
+          -stat_tck mean &&\
+
+tck2connectome -symmetric -zero_diagonal \
+               dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2_sift.tck \
+               dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
+               dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_FA_sift.csv \
+               -scale_file dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_meanFAweights_sift.csv \
+               -stat_edge mean &&\
+
+#sift2
 tcksample dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2.tck \
           dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_FA.nii.gz \
           dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_meanFAweights.csv \
