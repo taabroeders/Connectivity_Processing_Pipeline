@@ -37,14 +37,15 @@ anatomical_brain=$2
 restingstate=$3
 subfolder=$4/files
 delete_vols=$5
-FULLID=$6
-outputdir=${PWD}/func/${FULLID}
-
-#Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID} | sed 's|/|: |')####\n\n"
+FULLID_folder=$6
+outputdir=${PWD}/func/${FULLID_folder}
+[ -f ${outputdir}/SynBOLD_DisCo/output/BOLD_u.nii.gz ] && restingstate=${outputdir}/SynBOLD_DisCo/output/BOLD_u.nii.gz
 
 #Check if script has already been completed
 [ -d ${outputdir}/fmri.feat ] && exit 0
+
+#Print the ID of the subject (& session if available)
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
 
 printf "Determining FEAT settings...\n" &&\
 

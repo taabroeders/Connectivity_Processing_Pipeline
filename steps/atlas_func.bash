@@ -36,7 +36,7 @@ FULLID_folder=$1
 FULLID_file=$2
 
 #Check if script has already been completed
-[ -f func/${FULLID_folder}/atlas/denoised_func_data_nonaggr_hptf_BNatlas_timeseries.txt ] && exit 0
+[ -f func/${FULLID_folder}/${FULLID_file}_BNA_timeseries.txt ] && exit 0
 
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n" 

@@ -35,6 +35,7 @@ Optional arguments:
   --remove_vols [or --remove-vols] <n>               remove first <n> volumes (func. preprocessing) default=0
   --freesurfer <freesufer-folder>                    use output folder of previous freesurfer run (anat. prepocessing)
   --lesion-mask <lesion-mask>                        use lesion mask (t1 space) (diff. pipeline) default=[no lesions]
+  --func-sdc                                         perform fieldmap-less distortion correction on the functional data (experimental)
 Flags:
   -a perform anatomical preprocessing
   -f perform functional preprocessing
@@ -110,6 +111,7 @@ output_folder='' #output folder
 freesurfer_input='' #location of freesurfer input
 lesionmask='' #location of lesion mask
 remove_vols=0 #remove #n dummy volumes for functional preprocessing
+func_sdc=0 #perform experimental fieldmap-less distortion correction on functional data
 SUBID='' #subject identifier
 SESID='' #session identifier
 
@@ -125,6 +127,7 @@ while [ $# -gt 0 ] ; do
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
     --lesion-mask) lesionmask=$(realpath "$2"); shift ;;
+    --func-sdc) func_sdc=1 ;;
     -h|-\?|--help) print_usage ;;
     -?*) printf 'ERROR: Unknown option %s\n\n' "$1"; print_help ;;
     *) break ;;
@@ -162,7 +165,6 @@ fi
 anatomical_raw=${input_folder}/anat/${FULLID_file}*_T1w.nii.gz
 anatomical_noneck=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w.nii.gz
 anatomical_brain=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_brain.nii.gz
-anatomical_brain_mask=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_brain_mask.nii.gz
 fmri=${input_folder}/func/${FULLID_file}*_task-rest*_bold.nii.gz
 dwi=${input_folder}/dwi/${FULLID_file}*_dwi.nii.gz
 scriptfolder=$(dirname $(realpath $0))
@@ -205,18 +207,18 @@ mkdir -p ${output_folder}/logs/
 # Set default freesurfer output folder
 freesurfer_folder=${output_folder}/freesurfer/${FULLID_file}
 
-printf %"$(tput cols)"s |tr " " "#"
+printf %"$(tput cols)"s |tr " " "#"; printf "\n"
 echo "Processing $(echo ${FULLID_folder} | sed 's|/|: |')"
-printf %"$(tput cols)"s |tr " " "#"
+printf %"$(tput cols)"s |tr " " "#"; printf "\n"
 
 #----------------------------------------------------------------------
 #                Anatomical preprocessing
 #----------------------------------------------------------------------
 if [[ ${a_flag} -eq 1 ]];then
 
-printf %"$(tput cols)"s |tr " " "-"
+printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 printf 'Anatomical preprocessing\n'
-printf %"$(tput cols)"s |tr " " "-"
+printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 
 # Surface-reconstruction
 if [ -d ${freesurfer_folder} ]; then
@@ -237,12 +239,10 @@ if [ -f ${output_folder}/anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_
 else
   echo "Starting volumetric processing..."
   mkdir -p ${output_folder}/anat/${FULLID_folder} &&\
-  echo "  Clipping neck from T1..." &&\
-  sbatch --wait ${scriptfolder}/steps/clipneck.bash ${anatomical_raw} ${anatomical_noneck} ${FULLID_folder} &&\
   echo "  Mapping BNA cortical parcellations to FS subject-space..." &&\
   sbatch --wait ${scriptfolder}/steps/atlas_fs.bash ${scriptfolder} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
   echo "  Mapping parcellations and segmentations to T1 space..." &&\
-  sbatch --wait ${scriptfolder}/steps/fs_to_t1.bash ${anatomical_noneck} ${anatomical_brain} ${anatomical_brain_mask} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
+  sbatch --wait ${scriptfolder}/steps/fs_to_t1.bash ${anatomical_raw} ${anatomical_noneck} ${anatomical_brain} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
   echo "  Performing hybrid 5TT segmentations..." &&\
   sbatch --wait ${scriptfolder}/steps/hsvs_5ttgen.bash ${anatomical_noneck} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} ${lesionmask} &&\
   echo "  Mapping BNA to T1 space..." &&\
@@ -256,9 +256,9 @@ fi
 #----------------------------------------------------------------------
 if [[ ${f_flag} -eq 1 ]];then
 
-printf %"$(tput cols)"s |tr " " "-"
+printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 printf 'Functional preprocessing\n'
-printf %"$(tput cols)"s |tr " " "-"
+printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 
 if [ ! -f ${fmri} ]; then
   printf "ERROR: Requested functional preprocessing, but no functional MRI data found!\n\n"; print_help
@@ -271,6 +271,10 @@ if [ -f ${output_folder}/func/${FULLID_folder}/atlas/denoised_func_data_nonaggr_
 else
   echo "Starting processing of functional MRI data..."
   mkdir -p ${output_folder}/func/${FULLID_folder}
+  if [ $func_sdc -eq 1 ]; then
+  echo "  Performing fieldmap-less distortion correction..." &&\
+  sbatch --wait ${scriptfolder}/steps/func_sdc.bash ${anatomical_brain} ${fmri} ${scriptfolder} ${FULLID_file} ${FULLID_folder} || print_error
+  fi
   echo "  Performing FEAT..." &&\
   sbatch --wait ${scriptfolder}/steps/feat.bash ${anatomical_noneck} ${anatomical_brain} ${fmri} ${scriptfolder} ${remove_vols} ${FULLID_folder} &&\
   echo "  Running ICA-AROMA..." &&\
@@ -324,15 +328,16 @@ fi
 #                       Move log files
 #----------------------------------------------------------------------
 
+find ${output_folder}/logs/ -type f -empty -delete
 mkdir -p ${output_folder}/logs/${FULLID_folder}
 for logs in ${output_folder}/logs/*.out;do
   sublog=$(grep -l "####$(echo ${FULLID_folder} | sed 's|/|: |')####" $(realpath ${logs}))
   [ -z ${sublog} ] || mv ${sublog} ${output_folder}/logs/${FULLID_folder}
 done
 
-printf %"$(tput cols)"s |tr " " "#"
+printf %"$(tput cols)"s |tr " " "#"; printf "\n"
 printf 'Processing Completed!\n'
-printf %"$(tput cols)"s |tr " " "#"
+printf %"$(tput cols)"s |tr " " "#"; printf "\n"
 
 #----------------------------------------------------------------------
 #                       References, links, others, ...   

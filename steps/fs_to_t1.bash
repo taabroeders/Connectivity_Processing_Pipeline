@@ -32,9 +32,9 @@
 #----------------------------------------------------------------------
 
 #Input variables
-anatomical_noneck=$1
-anatomical_brain=$2
-anatomical_brain_mask=$3
+anatomical=$1
+anatomical_noneck=$2
+anatomical_brain=$3
 freesurfer_folder=$4
 FULLID_folder=$5
 FULLID_file=$6
@@ -51,7 +51,6 @@ mkdir -p anat/${FULLID_folder}/FS_to_t1 &&\
 
 # Map BNA to subjectslabel
 printf "Mapping parcellations and segmentations to T1 space...\n" &&\
-
 
 mri_label2vol --annot anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_lh.BN_Atlas.annot \
               --temp ${freesurfer_folder}/mri/T1.mgz \
@@ -111,7 +110,7 @@ fslmaths anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_cut.nii.gz -dilD
 
 #BNA to T1
 mri_vol2vol --mov anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_cut_dil.nii.gz \
-            --targ  ${anatomical_noneck} \
+            --targ  ${anatomical} \
             --regheader --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_t1.nii.gz \
             --no-save-reg --nearest &&\
 
@@ -125,24 +124,34 @@ mri_convert anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}.mgz \
             anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}.nii.gz &&\
 
 mri_vol2vol --mov anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}.nii.gz \
-            --targ ${anatomical_noneck} \
+            --targ ${anatomical} \
             --regheader --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}_t1.nii.gz --no-save-reg || exit
 done
 
 mri_vol2vol --mov ${freesurfer_folder}/mri/aparc.a2009s+aseg.mgz \
-            --targ ${anatomical_noneck} \
+            --targ ${anatomical} \
             --regheader --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_aparc.a2009s+aseg_anat.nii.gz --no-save-reg --nearest &&\
 
+mri_vol2vol --mov ${freesurfer_folder}/mri/nu.mgz \
+            --targ ${anatomical} \
+            --regheader --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_nu_anat.nii.gz --no-save-reg &&\
+
 mri_vol2vol --mov ${freesurfer_folder}/mri/brain.mgz \
-            --targ ${anatomical_noneck} \
+            --targ ${anatomical} \
             --regheader --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brain_anat.nii.gz --no-save-reg &&\
 
-mri_vol2vol --mov ${freesurfer_folder}/mri/brainmask.mgz \
-            --targ ${anatomical_noneck} \
-            --regheader --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brainmask_anat.nii.gz --no-save-reg &&\
+fslmaths  anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brain_anat.nii.gz \
+          -bin anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brainmask_anat.nii.gz &&\
 
-# Copy brain extracted output 
-cp anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brain_anat.nii.gz ${anatomical_brain} &&\
-cp anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brainmask_anat.nii.gz ${anatomical_brain_mask} &&\
+#Remove neck for 
+standard_space_roi anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_nu_anat.nii.gz \
+                   ${anatomical_noneck} -maskFOV -roiNONE
+
+#Create symbolic link with easier-to-find filenames for brain extracted output
+ln -s FS_to_t1/${FULLID_file}_brain_anat.nii.gz \
+      ${anatomical_brain} &&\
+
+ln -s FS_to_t1/${FULLID_file}_brainmask_anat.nii.gz \
+      ${anatomical_brain%%.nii.gz}_mask.nii.gz &&\
 
 printf "\n#### Done! ####\n"
