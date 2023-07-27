@@ -4,7 +4,7 @@
 #SBATCH --mem=40G                     #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=6      	      #max CPU cores per process
-#SBATCH --time=6:00:00                #time limit (H:MM:SS)
+#SBATCH --time=8:00:00                #time limit (H:MM:SS)
 #SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
@@ -61,13 +61,13 @@ antsRegistrationSyN.sh -d 3 \
 export PATH=$PATH:${FILEDIR} &&\
 
 antsRegistration_affine_SyN.sh --moving-mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain_mask.nii.gz \
-                                          --fixed-mask anat/${FULLID_folder}/${FULLID_file}_T1w_brain_mask.nii.gz \
-                                          --initial-transform dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_InitTrans_dwi2anat_0GenericAffine.mat \
-                                          --skip-linear \
-                                          -o dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat.nii.gz \
-                                          dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_vol0.nii.gz \
-					                      anat/${FULLID_folder}/${FULLID_file}_T1w.nii.gz \
-                                          dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat_ &&\
+                               --fixed-mask anat/${FULLID_folder}/${FULLID_file}_T1w_brain_mask.nii.gz \
+                               --initial-transform dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_InitTrans_dwi2anat_0GenericAffine.mat \
+                               --skip-linear \
+                               -o dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat.nii.gz \
+                               dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_vol0.nii.gz \
+					           anat/${FULLID_folder}/${FULLID_file}_T1w.nii.gz \
+                               dwi/${FULLID_folder}/anat2dwi/reg/${FULLID_file}_FinalTrans_dwi2anat_ &&\
 #Apply to 5TT file
 echo "  Bringing 5tt file in dwi space..." &&\
 antsApplyTransforms -i anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz \

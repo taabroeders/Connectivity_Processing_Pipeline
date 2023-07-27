@@ -35,6 +35,7 @@ Optional arguments:
   --remove_vols [or --remove-vols] <n>               remove first <n> volumes (func. preprocessing) default=0
   --freesurfer <freesufer-folder>                    use output folder of previous freesurfer run (anat. prepocessing)
   --lesion-mask <lesion-mask>                        use lesion mask (t1 space) (diff. pipeline) default=[no lesions]
+  --lesion-filled <lesion-filled T1>
   --func-sdc                                         perform fieldmap-less distortion correction on the functional data (experimental)
 Flags:
   -a perform anatomical preprocessing
@@ -110,6 +111,7 @@ input_folder='' #input folder
 output_folder='' #output folder
 freesurfer_input='' #location of freesurfer input
 lesionmask='' #location of lesion mask
+lesionfilled_T1='' #location of lesion filled T1
 remove_vols=0 #remove #n dummy volumes for functional preprocessing
 func_sdc=0 #perform experimental fieldmap-less distortion correction on functional data
 SUBID='' #subject identifier
@@ -127,6 +129,7 @@ while [ $# -gt 0 ] ; do
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
     --lesion-mask) lesionmask=$(realpath "$2"); shift ;;
+    --lesionfilled) lesionfilled_T1=$(realpath "$2"); shift ;;
     --func-sdc) func_sdc=1 ;;
     -h|-\?|--help) print_usage ;;
     -?*) printf 'ERROR: Unknown option %s\n\n' "$1"; print_help ;;
@@ -162,7 +165,11 @@ else
 fi
 
 ##set filenames in accordance with folder structure
-anatomical_raw=${input_folder}/anat/${FULLID_file}*_T1w.nii.gz
+if [ -z ${lesionfilled_T1} ]; then
+    anatomical_raw=${input_folder}/anat/${FULLID_file}*_T1w.nii.gz
+    else
+    anatomical_raw=${lesionfilled_T1}
+fi
 anatomical_noneck=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w.nii.gz
 anatomical_brain=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_brain.nii.gz
 fmri=${input_folder}/func/${FULLID_file}*_task-rest*_bold.nii.gz

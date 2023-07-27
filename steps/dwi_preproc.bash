@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=DWIpreproc         #a convenient name for your job
-#SBATCH --mem=30G                     #max memory per node
+#SBATCH --mem=2G                     #max memory per node
 #SBATCH --partition=luna-short        #using luna short queue
 #SBATCH --cpus-per-task=2       	   #max CPU cores per process
 #SBATCH --time=07:00:00               #time limit (HH:MM:SS)
@@ -69,11 +69,11 @@ PE=$(cat ${dwi_json} | grep '"PhaseEncodingDirection"' | awk -F" " '{print $2}' 
 RT=$(cat ${dwi_json} | grep '"TotalReadoutTime"' | awk -F" " '{print $2}' | sed 's/"//g' | sed 's/,//g')
 
 if [ ${PE} == "i" ];then PE_FSL="1 0 0"
-elif [ ${PE} == "-i" ];then PE_FSL="-1 0 0"
+elif [ ${PE} == "i-" ];then PE_FSL="-1 0 0"
 elif [ ${PE} == "j" ];then PE_FSL="0 1 0"
-elif [ ${PE} == "-j" ];then PE_FSL="0 -1 0"
+elif [ ${PE} == "j-" ];then PE_FSL="0 -1 0"
 elif [ ${PE} == "k" ];then PE_FSL="0 0 1"
-elif [ ${PE} == "-k" ];then PE_FSL="0 0 -1"
+elif [ ${PE} == "k-" ];then PE_FSL="0 0 -1"
 fi
 
 #----------------------------------------------------------------------
