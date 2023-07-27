@@ -35,7 +35,6 @@ Optional arguments:
   --remove_vols [or --remove-vols] <n>               remove first <n> volumes (func. preprocessing) default=0
   --freesurfer <freesufer-folder>                    use output folder of previous freesurfer run (anat. prepocessing)
   --lesion-mask <lesion-mask>                        use lesion mask (t1 space) (diff. pipeline) default=[no lesions]
-  --lesion-filled <lesion-filled T1>
   --func-sdc                                         perform fieldmap-less distortion correction on the functional data (experimental)
 Flags:
   -a perform anatomical preprocessing
@@ -111,7 +110,6 @@ input_folder='' #input folder
 output_folder='' #output folder
 freesurfer_input='' #location of freesurfer input
 lesionmask='' #location of lesion mask
-lesionfilled_T1='' #location of lesion filled T1
 remove_vols=0 #remove #n dummy volumes for functional preprocessing
 func_sdc=0 #perform experimental fieldmap-less distortion correction on functional data
 SUBID='' #subject identifier
@@ -129,7 +127,6 @@ while [ $# -gt 0 ] ; do
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
     --lesion-mask) lesionmask=$(realpath "$2"); shift ;;
-    --lesion-filled) lesionfilled_T1=$(realpath "$2"); shift ;;
     --func-sdc) func_sdc=1 ;;
     -h|-\?|--help) print_usage ;;
     -?*) printf 'ERROR: Unknown option %s\n\n' "$1"; print_help ;;
@@ -165,11 +162,7 @@ else
 fi
 
 ##set filenames in accordance with folder structure
-if [ -z ${lesionfilled_T1} ]; then
-    anatomical_raw=${input_folder}/anat/${FULLID_file}*_T1w.nii.gz
-    else
-    anatomical_raw=${lesionfilled_T1}
-fi
+anatomical_raw=${input_folder}/anat/${FULLID_file}*_T1w.nii.gz
 anatomical_noneck=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w.nii.gz
 anatomical_brain=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_brain.nii.gz
 fmri=${input_folder}/func/${FULLID_file}*_task-rest*_bold.nii.gz
@@ -177,7 +170,7 @@ dwi=${input_folder}/dwi/${FULLID_file}*_dwi.nii.gz
 scriptfolder=$(dirname $(realpath $0))
 
 # Check if all required files are available
-if [[ ${a_flag} -eq 1 ]] && [ ! -f ${anatomical_raw} ]; then
+if [[ ${a_flag} -eq 1 ]] && [ ! -f ${anatomical} ]; then
   printf "ERROR: Requested anatomical preprocessing, but no anatomical data found.\n\n"; print_help
 fi
 if [ ! -z ${freesurfer_input} ] && [ ! -f ${freesurfer_input}/stats/aseg.stats ]; then
@@ -227,6 +220,15 @@ printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 printf 'Anatomical preprocessing\n'
 printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 
+# lesion filling
+if [ -z ${lesionmask} ]; then
+  anatomical=${output_folder}/anat/${FULLID_folder}/lesion_filling/${FULLID_file}_lesionfilled_anat.nii.gz
+  sbatch --wait ${scriptfolder}/steps/lesionfilling.bash ${anatomical_raw} ${lesionmask} ${scriptfolder} ${FULLID_folder} ${FULLID_file} || print_error
+  else
+  anatomical=${anatomical_raw}
+  echo "No lesion mask provided. Skipping lesion-filling..."
+fi
+
 # Surface-reconstruction
 if [ -d ${freesurfer_folder} ]; then
   echo "Freesurfer output directory already exists. Skipping this step..."
@@ -237,7 +239,7 @@ elif [ -f ${freesurfer_input}/stats/aseg.stats ];then
 else
   echo "Starting freesurfer processing..."
   mkdir -p ${output_folder}/freesurfer
-  sbatch --wait ${scriptfolder}/steps/freesurfer.bash ${anatomical_raw} ${output_folder}/freesurfer ${FULLID_file} || print_error
+  sbatch --wait ${scriptfolder}/steps/freesurfer.bash ${anatomical} ${output_folder}/freesurfer ${FULLID_file} || print_error
 fi
 
 # Volumetric segmentation and registration
@@ -249,7 +251,7 @@ else
   echo "  Mapping BNA cortical parcellations to FS subject-space..." &&\
   sbatch --wait ${scriptfolder}/steps/atlas_fs.bash ${scriptfolder} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
   echo "  Mapping parcellations and segmentations to T1 space..." &&\
-  sbatch --wait ${scriptfolder}/steps/fs_to_t1.bash ${anatomical_raw} ${anatomical_noneck} ${anatomical_brain} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
+  sbatch --wait ${scriptfolder}/steps/fs_to_t1.bash ${anatomical} ${anatomical_noneck} ${anatomical_brain} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
   echo "  Performing hybrid 5TT segmentations..." &&\
   sbatch --wait ${scriptfolder}/steps/hsvs_5ttgen.bash ${anatomical_noneck} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} ${lesionmask} &&\
   echo "  Mapping BNA to T1 space..." &&\
