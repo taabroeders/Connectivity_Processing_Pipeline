@@ -4,3 +4,6 @@
 [submodule "files/ICA-AROMA"]
 	path = files/ICA-AROMA
 	url = https://github.com/maartenmennes/ICA-AROMA
+[submodule "files/niftyseg"]
+	path = files/niftyseg
+	url = https://github.com/KCL-BMEIS/NiftySeg
