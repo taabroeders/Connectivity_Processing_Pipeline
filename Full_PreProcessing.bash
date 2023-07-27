@@ -129,7 +129,7 @@ while [ $# -gt 0 ] ; do
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
     --lesion-mask) lesionmask=$(realpath "$2"); shift ;;
-    --lesionfilled) lesionfilled_T1=$(realpath "$2"); shift ;;
+    --lesion-filled) lesionfilled_T1=$(realpath "$2"); shift ;;
     --func-sdc) func_sdc=1 ;;
     -h|-\?|--help) print_usage ;;
     -?*) printf 'ERROR: Unknown option %s\n\n' "$1"; print_help ;;
