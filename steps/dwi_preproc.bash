@@ -57,11 +57,11 @@ mkdir -p dwi/${FULLID_folder}/preprocessing
 #----------------------------------------------------------------------
 
 #dMRI noise level estimation and denoising using Marchenko-Pastur PCA
-dwidenoise ${dwi_nii} \
+${FILEDIR}/singularity/MRtrix3.sif dwidenoise ${dwi_nii} \
            dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_dwi.nii.gz &&\
 
 #Remove Gibbs Ringing Artifacts
-mrdegibbs dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_dwi.nii.gz \
+${FILEDIR}/singularity/MRtrix3.sif mrdegibbs dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_dwi.nii.gz \
           dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.nii.gz &&\
 
 #Determine Phase-Encoding Direction and Readout Time and create acquisition parameters file
@@ -161,9 +161,9 @@ else
 printf "Using fieldmaps for distortion correction...\n"
 
 #Create one b0pair file of b0s with opposite phase encoding directions
-mrcat ${b0pair_samePE} ${b0pair_otherPE} dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_pair.nii.gz -axis 3 &&\
+${FILEDIR}/singularity/MRtrix3.sif mrcat ${b0pair_samePE} ${b0pair_otherPE} dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_pair.nii.gz -axis 3 &&\
 
-dwifslpreproc dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.nii.gz \
+${FILEDIR}/singularity/MRtrix3.sif dwifslpreproc dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.nii.gz \
               dwi/${FULLID_folder}/preprocessing/${FULLID_file}_eddy_unwarped_dwi.nii.gz \
               -fslgrad \
               ${dwi_bvec} \
@@ -192,7 +192,7 @@ fi
 #----------------------------------------------------------------------
 
 #Perform DWI bias field correction using the N4 algorithm as provided in ANTs
-dwibiascorrect ants \
+${FILEDIR}/singularity/MRtrix3.sif dwibiascorrect ants \
                dwi/${FULLID_folder}/preprocessing/${FULLID_file}_eddy_unwarped_dwi.nii.gz \
                dwi/${FULLID_folder}/preprocessing/${FULLID_file}_eddy_unwarped_biascor_dwi.nii.gz \
                -fslgrad \

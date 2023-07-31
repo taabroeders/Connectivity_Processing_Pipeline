@@ -35,6 +35,7 @@
 anatomical=$1
 FULLID_file=$2
 FULLID_folder=$3
+FILEDIR=$4/files
 
 #Check if script has already been completed
 [ -f dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_FA.csv ] && exit 0
@@ -62,14 +63,14 @@ echo "  Computing connectivity matrices" &&\
 
 # compute matrix (edges are sum of streamline weights)
 #sift
-tck2connectome -symmetric -zero_diagonal \
+${FILEDIR}/singularity/MRtrix3.sif tck2connectome -symmetric -zero_diagonal \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2_sift.tck \
                dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
                dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_streamlines_sift.csv \
                -out_assignment dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_assignment_sift.csv &&\
 
 #sift2
-tck2connectome -symmetric -zero_diagonal \
+${FILEDIR}/singularity/MRtrix3.sif tck2connectome -symmetric -zero_diagonal \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2.tck \
                dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
                dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_streamlines_sift2.csv \
@@ -78,14 +79,14 @@ tck2connectome -symmetric -zero_diagonal \
 
 # compute matrix (edges are mean streamline length)
 #sift
-tck2connectome -symmetric -zero_diagonal \
+${FILEDIR}/singularity/MRtrix3.sif tck2connectome -symmetric -zero_diagonal \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2_sift.tck \
                dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
                dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_length_sift.csv \
                -scale_length -stat_edge mean &&\
 
 #sift2
-tck2connectome -symmetric -zero_diagonal \
+${FILEDIR}/singularity/MRtrix3.sif tck2connectome -symmetric -zero_diagonal \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2.tck \
                dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
                dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_length.csv \
@@ -93,12 +94,12 @@ tck2connectome -symmetric -zero_diagonal \
 
 # compute matrix (edges are mean FA)
 #sift
-tcksample dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2_sift.tck \
+${FILEDIR}/singularity/MRtrix3.sif tcksample dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2_sift.tck \
           dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_FA.nii.gz \
           dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_meanFAweights_sift.csv \
           -stat_tck mean &&\
 
-tck2connectome -symmetric -zero_diagonal \
+${FILEDIR}/singularity/MRtrix3.sif tck2connectome -symmetric -zero_diagonal \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2_sift.tck \
                dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
                dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_FA_sift.csv \
@@ -106,12 +107,12 @@ tck2connectome -symmetric -zero_diagonal \
                -stat_edge mean &&\
 
 #sift2
-tcksample dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2.tck \
+${FILEDIR}/singularity/MRtrix3.sif tcksample dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2.tck \
           dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_FA.nii.gz \
           dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_meanFAweights.csv \
           -stat_tck mean &&\
 
-tck2connectome -symmetric -zero_diagonal \
+${FILEDIR}/singularity/MRtrix3.sif tck2connectome -symmetric -zero_diagonal \
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2.tck \
                dwi/${FULLID_folder}/anat2dwi/atlas/${FULLID_file}_BNA_dwi.nii.gz \
                dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_FA.csv \

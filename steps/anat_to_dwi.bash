@@ -78,7 +78,7 @@ antsApplyTransforms -i anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_ana
                     -d 3 -e 3 --verbose &&\
 
 echo "  Creating GM/WM interface..." &&\
-5tt2gmwmi dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_5tthsvs_dwi_lesions.nii.gz \
+${FILEDIR}/singularity/MRtrix3.sif 5tt2gmwmi dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_5tthsvs_dwi_lesions.nii.gz \
           dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_gmwmi_dwi.nii.gz &&\
 
 printf "\n#### Done! ####\n"

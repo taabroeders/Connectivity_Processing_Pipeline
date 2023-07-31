@@ -37,6 +37,7 @@ FREESURFER_DIR=$2
 FULLID_folder=$3
 FULLID_file=$4
 lesionmask=$5
+FILEDIR=$6/files
 
 #Check if script has already been completed
 [ -f anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_cerebellum_anat.nii.gz ] && exit 0
@@ -49,9 +50,14 @@ mkdir -p anat/${FULLID_folder}/hsvs_5tt &&\
 
 #perform hybrid (FSL+freesurfer) tissue-type segmentation
 echo "Performing 5TT segmentations..." &&\
-5ttgen hsvs ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz \
+${FILEDIR}/singularity/MRtrix3.sif 5ttgen hsvs ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz \
        -white_stem -nocrop -nocleanup -scratch anat/${FULLID_folder}/hsvs_5tt/all_segmentations \
        -hippocampi first -thalami first &&\
+
+#Fix failed cases
+for vessel in anat/${FULLID_folder}/hsvs_5tt/all_segmentations/*vessel.mif;do
+    bash ${FILEDIR}/fix_hsvs_issue.bash ${vessel} anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz
+done
 
 #moving segmentations from freesurfer to native anatomical space
 mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz \
@@ -61,7 +67,7 @@ mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurf
 
 #setting pathological tissue to lesion mask if lesion mask provided
 if [ ! -z ${lesionmask} ]; then
-5ttedit -path ${lesionmask} \
+${FILEDIR}/singularity/MRtrix3.sif 5ttedit -path ${lesionmask} \
         anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat.nii.gz \
         anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz
 else
@@ -80,7 +86,7 @@ mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/all_segmentations/first_all_non
             --no-save-reg --nearest &&\
 
 #transform cerebellum segmentation to anat-space
-mrconvert anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.mif \
+${FILEDIR}/singularity/MRtrix3.sif mrconvert anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.mif \
           anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.nii.gz &&\
 
 mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.nii.gz \
