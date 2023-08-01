@@ -4,7 +4,7 @@
 #SBATCH --mem=3G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=2      	      #max CPU cores per process
-#SBATCH --time=0:30:00                #time limit (H:MM:SS)
+#SBATCH --time=0:45:00                #time limit (H:MM:SS)
 #SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
@@ -36,8 +36,8 @@ anatomical=$1
 FREESURFER_DIR=$2
 FULLID_folder=$3
 FULLID_file=$4
-lesionmask=$5
-FILEDIR=$6/files
+FILEDIR=$5/files
+lesionmask=$6
 
 #Check if script has already been completed
 [ -f anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_cerebellum_anat.nii.gz ] && exit 0
@@ -55,9 +55,20 @@ ${FILEDIR}/singularity/MRtrix3.sif 5ttgen hsvs ${FREESURFER_DIR} anat/${FULLID_f
        -hippocampi first -thalami first &&\
 
 #Fix failed cases
-for vessel in anat/${FULLID_folder}/hsvs_5tt/all_segmentations/*vessel.mif;do
-    bash ${FILEDIR}/fix_hsvs_issue.bash ${vessel} anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz
-done
+if [ ! -f anat/${FULLID_folder}/hsvs_5tt/all_segmentations/first_all_none_firstseg.nii.gz ];then
+    bash ${FILEDIR}/fix_first_hsvs.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${FILEDIR}
+else
+    for ii in first.logs/*.e*;do
+        if [ -s $ii ];then
+            echo "WARNING: FIRST completed but error logs non-empty. Check output thoroughly!";break
+        fi
+    done
+
+    for vessel in anat/${FULLID_folder}/hsvs_5tt/all_segmentations/*vessel.mif;do
+        [ $(${FILEDIR}/singularity/MRtrix3.sif mrstats -mask ${vessel} -output count ${vessel}) -gt 0 ] &&\
+        bash ${FILEDIR}/fix_hsvs_issue.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${FILEDIR} ${vessel} || exit 1 && break
+    done
+fi
 
 #moving segmentations from freesurfer to native anatomical space
 mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz \

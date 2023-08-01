@@ -43,7 +43,22 @@
 [ -z $ANTSPATH ] || [ ! -f ${ANTSPATH}/ANTS ] || [ -z $(printf $PATH | grep $ANTSPATH) ]  &&\
 { printf 'ERROR: ANTSPATH not correctly set as environmental variable or not added to PATH, aborting...\n\n' ; exit 1; }
 
-[ -z $(printf $PATH | grep MRtrix) ] &&\
-{ printf 'ERROR: MRtrix not correctly added to PATH, aborting...\n\n' ; exit 1; }
+[ -d $1/files/MRtrix3Tissue ] &&\
+{ printf 'ERROR: MRtrix3Tissue not correctly set, aborting...\n\n' ; exit 1; }
+
+[ -d $1/files/ICA-AROMA ] &&\
+{ printf 'ERROR: ICA-AROMA not correctly set, aborting...\n\n' ; exit 1; }
+
+[ -d $1/files/niftyseg ] &&\
+{ printf 'ERROR: niftyseg not correctly set, aborting...\n\n' ; exit 1; }
+
+[ -f $1/files/singularity/MRtrix3.sif ] &&\
+{ printf 'ERROR: MRtrix3 singularity not correctly set, aborting...\n\n' ; exit 1; }
+
+[ -f $1/files/singularity/synb0-disco.sif ] &&\
+{ printf 'ERROR: synb0-disco singularity not correctly set, aborting...\n\n' ; exit 1; }
+
+[ -f $1/files/singularity/synbold-disco.sif ] &&\
+{ printf 'ERROR: synbold-disco singularity not correctly set, aborting...\n\n' ; exit 1; }
 
 exit 0

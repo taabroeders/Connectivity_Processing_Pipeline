@@ -81,8 +81,22 @@ printf "Try: 'bash Full_preProcessing.bash --help' for more information.\n\n"
 exit
 }
 
+sort_logs() {
+output_fldr=$1
+FULLID_fldr=$2
+
+find ${output_fldr}/logs/ -type f -empty -delete
+mkdir -p ${output_fldr}/logs/${FULLID_fldr}
+for logs in ${output_fldr}/logs/*.out;do
+  sublog=$(grep -l "####$(echo ${FULLID_fldr} | sed 's|/|: |')####" $(realpath ${logs}))
+  [ -z ${sublog} ] || mv ${sublog} ${output_fldr}/logs/${FULLID_fldr}
+done
+[ -f ${output_fldr}/dcgm-gpu-stats*.out ] && rm ${output_fldr}/dcgm-gpu-stats*.out
+}
+
 print_error() {
 printf "An error occurred during processing, please check the log files.\n\n"
+sort_logs $1 $2
 exit
 }
 
@@ -218,9 +232,9 @@ printf 'Anatomical preprocessing\n'
 printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 
 # lesion filling
-if [ -z ${lesionmask} ]; then
+if [ ! -z ${lesionmask} ]; then
   anatomical=${output_folder}/anat/${FULLID_folder}/lesion_filling/${FULLID_file}_lesionfilled_anat.nii.gz
-  sbatch --wait ${scriptfolder}/steps/lesionfilling.bash ${anatomical_raw} ${lesionmask} ${scriptfolder} ${FULLID_folder} ${FULLID_file} || print_error
+  sbatch --wait ${scriptfolder}/steps/lesionfilling.bash ${anatomical_raw} ${lesionmask} ${scriptfolder} ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
   else
   anatomical=${anatomical_raw}
   echo "No lesion mask provided. Skipping lesion-filling..."
@@ -236,7 +250,7 @@ elif [ -f ${freesurfer_input}/stats/aseg.stats ];then
 else
   echo "Starting freesurfer processing..."
   mkdir -p ${output_folder}/freesurfer
-  sbatch --wait ${scriptfolder}/steps/freesurfer.bash ${anatomical} ${output_folder}/freesurfer ${FULLID_file} || print_error
+  sbatch --wait ${scriptfolder}/steps/freesurfer.bash ${anatomical} ${output_folder}/freesurfer ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
 fi
 
 # Volumetric segmentation and registration
@@ -250,9 +264,9 @@ else
   echo "  Mapping parcellations and segmentations to T1 space..." &&\
   sbatch --wait ${scriptfolder}/steps/fs_to_t1.bash ${anatomical} ${anatomical_noneck} ${anatomical_brain} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
   echo "  Performing hybrid 5TT segmentations..." &&\
-  sbatch --wait ${scriptfolder}/steps/hsvs_5ttgen.bash ${anatomical_noneck} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} ${lesionmask} ${scriptfolder} &&\
+  sbatch --wait ${scriptfolder}/steps/hsvs_5ttgen.bash ${anatomical_noneck} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} ${scriptfolder} ${lesionmask} &&\
   echo "  Mapping BNA to T1 space..." &&\
-  sbatch --wait ${scriptfolder}/steps/atlas_anat.bash ${FULLID_folder} ${FULLID_file} || print_error
+  sbatch --wait ${scriptfolder}/steps/atlas_anat.bash ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
 fi
 
 fi
@@ -279,7 +293,7 @@ else
   mkdir -p ${output_folder}/func/${FULLID_folder}
   if [ $func_sdc -eq 1 ]; then
   echo "  Performing fieldmap-less distortion correction..." &&\
-  sbatch --wait ${scriptfolder}/steps/func_sdc.bash ${anatomical_brain} ${fmri} ${scriptfolder} ${FULLID_file} ${FULLID_folder} || print_error
+  sbatch --wait ${scriptfolder}/steps/func_sdc.bash ${anatomical_brain} ${fmri} ${scriptfolder} ${FULLID_file} ${FULLID_folder} || print_error ${output_folder} ${FULLID_folder}
   fi
   echo "  Performing FEAT..." &&\
   sbatch --wait ${scriptfolder}/steps/feat.bash ${anatomical_noneck} ${anatomical_brain} ${fmri} ${scriptfolder} ${remove_vols} ${FULLID_folder} &&\
@@ -292,7 +306,7 @@ else
   echo "  Transforming functional data to standard-space..." &&\
   sbatch --wait ${scriptfolder}/steps/func_to_std.bash ${FULLID_folder} ${FULLID_file} &&\
   echo "  Computing functional timeseries using Brainnetome Atlas..." &&\
-  sbatch --wait ${scriptfolder}/steps/atlas_func.bash ${FULLID_folder} ${FULLID_file} || print_error
+  sbatch --wait ${scriptfolder}/steps/atlas_func.bash ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
 fi
 
 fi
@@ -325,7 +339,7 @@ else
   echo "  Performing tractography and SIFT filtering..." &&\
   sbatch --wait ${scriptfolder}/steps/tractography.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
   echo "  Computing structural connectivity matrices..." &&\
-  sbatch --wait ${scriptfolder}/steps/atlas_dti.bash ${anatomical_noneck} ${FULLID_file} ${FULLID_folder} ${scriptfolder} || print_error
+  sbatch --wait ${scriptfolder}/steps/atlas_dti.bash ${anatomical_noneck} ${FULLID_file} ${FULLID_folder} ${scriptfolder} || print_error ${output_folder} ${FULLID_folder}
 fi
 
 fi
@@ -334,12 +348,7 @@ fi
 #                       Move log files
 #----------------------------------------------------------------------
 
-find ${output_folder}/logs/ -type f -empty -delete
-mkdir -p ${output_folder}/logs/${FULLID_folder}
-for logs in ${output_folder}/logs/*.out;do
-  sublog=$(grep -l "####$(echo ${FULLID_folder} | sed 's|/|: |')####" $(realpath ${logs}))
-  [ -z ${sublog} ] || mv ${sublog} ${output_folder}/logs/${FULLID_folder}
-done
+sort_logs ${output_folder} ${FULLID_folder}
 
 printf %"$(tput cols)"s |tr " " "#"; printf "\n"
 printf 'Processing Completed!\n'

@@ -163,7 +163,7 @@ printf "Using fieldmaps for distortion correction...\n"
 #Create one b0pair file of b0s with opposite phase encoding directions
 ${FILEDIR}/singularity/MRtrix3.sif mrcat ${b0pair_samePE} ${b0pair_otherPE} dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_pair.nii.gz -axis 3 &&\
 
-${FILEDIR}/singularity/MRtrix3.sif dwifslpreproc dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.nii.gz \
+apptainer run --nv ${FILEDIR}/singularity/MRtrix3.sif dwifslpreproc dwi/${FULLID_folder}/preprocessing/${FULLID_file}_denoised_unringed_dwi.nii.gz \
               dwi/${FULLID_folder}/preprocessing/${FULLID_file}_eddy_unwarped_dwi.nii.gz \
               -fslgrad \
               ${dwi_bvec} \
