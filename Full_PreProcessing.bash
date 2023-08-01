@@ -108,6 +108,9 @@ module load FreeSurfer/7.3.2-centos8_x86_64
 module load ANTs/2.4.1
 module load art/2.1
 module load Anaconda3/2023.03
+module load GCC/9.3.0
+module load OpenMPI/4.0.3
+module load MRtrix/3.0.3-Python-3.8.2
 
 #----------------------------------------------------------------------
 #                         Input variables
@@ -333,13 +336,13 @@ else
   echo "  Starting diffusion preprocessing..." &&\
   sbatch --wait ${scriptfolder}/steps/dwi_preproc.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${scriptfolder} &&\
   echo "  Starting diffusion reconstruction..." &&\
-  sbatch --wait ${scriptfolder}/steps/dwi_recon.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
+  sbatch --wait ${scriptfolder}/steps/dwi_recon.bash ${input_folder} ${FULLID_file} ${FULLID_folder} &&\
   echo "  Transforming 5TT segmentations to dwi and create GM/WM interface..." &&\
   sbatch --wait ${scriptfolder}/steps/anat_to_dwi.bash ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
   echo "  Performing tractography and SIFT filtering..." &&\
   sbatch --wait ${scriptfolder}/steps/tractography.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
   echo "  Computing structural connectivity matrices..." &&\
-  sbatch --wait ${scriptfolder}/steps/atlas_dti.bash ${anatomical_noneck} ${FULLID_file} ${FULLID_folder} ${scriptfolder} || print_error ${output_folder} ${FULLID_folder}
+  sbatch --wait ${scriptfolder}/steps/atlas_dti.bash ${anatomical_noneck} ${FULLID_file} ${FULLID_folder} || print_error ${output_folder} ${FULLID_folder}
 fi
 
 fi

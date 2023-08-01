@@ -35,7 +35,6 @@
 INPUT_DIR=$(realpath $1)
 FULLID_file=$2
 FULLID_folder=$3
-FILEDIR=$4/files
 
 dwi_nii=${INPUT_DIR}/dwi/${FULLID_file}*_dwi.nii.gz
 dwi_bval=${dwi_nii%%.nii.gz}.bval
@@ -51,7 +50,7 @@ printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
 mkdir -p dwi/${FULLID_folder}/reconstruction
 
 #Diffusion tensor estimation
-${FILEDIR}/singularity/MRtrix3.sif dwi2tensor dwi/${FULLID_folder}/preprocessing/${FULLID_file}_preprocessed_dwi.nii.gz \
+dwi2tensor dwi/${FULLID_folder}/preprocessing/${FULLID_file}_preprocessed_dwi.nii.gz \
            dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_tensor.nii.gz \
            -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain_mask.nii.gz \
            -fslgrad \
@@ -59,7 +58,7 @@ ${FILEDIR}/singularity/MRtrix3.sif dwi2tensor dwi/${FULLID_folder}/preprocessing
            ${dwi_bval} &&\
 
 #Generate maps of tensor-derived parameters
-${FILEDIR}/singularity/MRtrix3.sif tensor2metric dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_tensor.nii.gz \
+tensor2metric dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_tensor.nii.gz \
               -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain_mask.nii.gz \
               -adc dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_MD.nii.gz \
               -fa dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_FA.nii.gz \

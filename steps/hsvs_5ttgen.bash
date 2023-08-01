@@ -50,7 +50,7 @@ mkdir -p anat/${FULLID_folder}/hsvs_5tt &&\
 
 #perform hybrid (FSL+freesurfer) tissue-type segmentation
 echo "Performing 5TT segmentations..." &&\
-${FILEDIR}/singularity/MRtrix3.sif 5ttgen hsvs ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz \
+5ttgen hsvs ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz \
        -white_stem -nocrop -nocleanup -scratch anat/${FULLID_folder}/hsvs_5tt/all_segmentations \
        -hippocampi first -thalami first &&\
 
@@ -65,7 +65,7 @@ else
     done
 
     for vessel in anat/${FULLID_folder}/hsvs_5tt/all_segmentations/*vessel.mif;do
-        [ $(${FILEDIR}/singularity/MRtrix3.sif mrstats -mask ${vessel} -output count ${vessel}) -gt 0 ] &&\
+        [ $(mrstats -mask ${vessel} -output count ${vessel}) -gt 0 ] &&\
         bash ${FILEDIR}/fix_hsvs_issue.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${FILEDIR} ${vessel} || exit 1 && break
     done
 fi
@@ -78,7 +78,7 @@ mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurf
 
 #setting pathological tissue to lesion mask if lesion mask provided
 if [ ! -z ${lesionmask} ]; then
-${FILEDIR}/singularity/MRtrix3.sif 5ttedit -path ${lesionmask} \
+5ttedit -path ${lesionmask} \
         anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat.nii.gz \
         anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_anat_lesions.nii.gz
 else
@@ -97,7 +97,7 @@ mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/all_segmentations/first_all_non
             --no-save-reg --nearest &&\
 
 #transform cerebellum segmentation to anat-space
-${FILEDIR}/singularity/MRtrix3.sif mrconvert anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.mif \
+mrconvert anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.mif \
           anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.nii.gz &&\
 
 mri_vol2vol --mov anat/${FULLID_folder}/hsvs_5tt/all_segmentations/FAST_1.nii.gz \
