@@ -12,4 +12,4 @@ module load Anaconda3/2023.03
 
 [ -f $(dirname $0)/files/singularity/synb0-disco.sif ] || singularity pull $(dirname $0)/files/singularity/synb0-disco.sif docker://leonyichencai/synb0-disco:v3.0
 
-[ -d $(dirname $0)/files/preproc_env ] || conda env create --prefix $(dirname $0)/files/preproc_env -f $(dirname $0)/files/environment.yml
+[ -d $(dirname $0)/files/preproc_env_ica ] || conda env create --prefix $(dirname $0)/files/preproc_env -f $(dirname $0)/files/environment_ica.yml
