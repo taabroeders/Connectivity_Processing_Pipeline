@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=DWIrecon           #a convenient name for your job
+#SBATCH --job-name=dwi_recon          #a convenient name for your job
 #SBATCH --mem=3G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=2       	  #max CPU cores per process
@@ -44,7 +44,7 @@ dwi_bvec=${dwi_nii%%.nii.gz}.bvec
 [ -f dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_FA.nii.gz ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #Create output folder
 mkdir -p dwi/${FULLID_folder}/reconstruction

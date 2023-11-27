@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=lesionfilling      #a convenient name for your job
-#SBATCH --mem=3G                    #max memory per node
+#SBATCH --mem=3G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	      #max CPU cores per process
 #SBATCH --time=0:30:00                #time limit (H:MM:SS)
@@ -41,12 +41,13 @@ FULLID_file=$5
 [ -f anat/${FULLID_folder}/lesion_filling/${FULLID_file}_lesionfilled_anat.nii.gz ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #Create output folder
 mkdir -p anat/${FULLID_folder}/lesion_filling &&\
 
 #Perform lesion filling
+echo "Performing lesion filling..."
 ${FILEDIR}/niftyseg/bin/seg_FillLesions \
     -i ${anatomical_raw} \
     -l ${lesion_mask} \

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=Atlas2DTI          #a convenient name for your job
+#SBATCH --job-name=atlas_dti          #a convenient name for your job
 #SBATCH --mem=300M                    #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=2      	  #max CPU cores per process
@@ -40,7 +40,7 @@ FULLID_folder=$3
 [ -f dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_FA.csv ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #Create output folder
 mkdir -p dwi/${FULLID_folder}/anat2dwi/atlas &&\

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=Freesurfer         #a convenient name for your job
+#SBATCH --job-name=freesurfer         #a convenient name for your job
 #SBATCH --mem=4G                      #max memory per node
 #SBATCH --partition=luna-cpu-long     #using luna short queue
 #SBATCH --cpus-per-task=4      	      #max CPU cores per process
@@ -38,7 +38,7 @@ FULLID=$3
 SUBJECTS_DIR=${OUTPUTDIR}
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID} | sed 's|_|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #Run Freesurfer
 echo "Starting freesurfer processing..." &&\

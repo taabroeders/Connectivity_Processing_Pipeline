@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=VarCheck           #a convenient name for your job
+#SBATCH --job-name=check_env          #a convenient name for your job
 #SBATCH --mem=4M                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	      #max CPU cores per process

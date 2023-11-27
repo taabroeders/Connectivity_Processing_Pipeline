@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=ICA-AROMA          #a convenient name for your job
+#SBATCH --job-name=ica-aroma          #a convenient name for your job
 #SBATCH --mem=2G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	   #max CPU cores per process
@@ -40,14 +40,15 @@ FULLID=$3
 [ -d func/${FULLID}/ICA_AROMA ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #for each functional scan-session
 echo "Running ICA-AROMA..." &&\
 
 #perform ICA-AROMA
-source activate ${FILEDIR}/preproc_env &&\
-python ${FILEDIR}/ICA-AROMA/ICA_AROMA.py \
+eval "$(conda shell.bash hook)" &&\
+conda activate ${FILEDIR}/preproc_env_ica &&\
+${FILEDIR}/preproc_env_ica/bin/python ${FILEDIR}/ICA-AROMA/ICA_AROMA.py \
        -feat ${PWD}/func/${FULLID}/fmri.feat \
        -out ${PWD}/func/${FULLID}/ICA_AROMA/ &&\
 conda deactivate &&\

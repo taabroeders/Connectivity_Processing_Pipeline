@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=FEAT               #a convenient name for your job
+#SBATCH --job-name=feat               #a convenient name for your job
 #SBATCH --mem=2G                      #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	      #max CPU cores per process
@@ -45,7 +45,7 @@ outputdir=${PWD}/func/${FULLID_folder}
 [ -d ${outputdir}/fmri.feat ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 printf "Determining FEAT settings...\n" &&\
 
@@ -79,6 +79,9 @@ anatomical_feat_location=$(remove_ext ${anatomical_brain} | sed 's/_brain$//')".
 printf "Performing FEAT...\n" &&\
 feat ${outputdir}/feat_settings.fsf &&\
 rm ${outputdir}/feat_settings.fsf &&\
+
+#change permissions (bug)
+chmod -R u+rwx ${outputdir}/fmri.feat
 
 printf "\n#### Done! ####\n"
 

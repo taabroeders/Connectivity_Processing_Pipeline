@@ -39,7 +39,7 @@ FULLID_file=$2
 [ -f func/${FULLID_folder}/temporal_filtering/${FULLID_file}_denoised_func_data_nonaggr_hptf_func.nii.gz ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #Create output folder
 mkdir -p func/${FULLID_folder}/temporal_filtering &&\
@@ -61,7 +61,7 @@ echo "  Setting the bptf value..." &&\
 TR=$(fslval func/${FULLID_folder}/ICA_AROMA/denoised_func_data_nonaggr.nii.gz pixdim4) &&\
 
 # Calculating the highpass temporal filter cut-off
-bptf=$(python -c "print(50/$TR)") &&\
+bptf=$(python -c "print(100/$TR)") &&\
 
 echo "  Performing highpass filtering and adding temporal mean back again..." &&\
 fslmaths func/${FULLID_folder}/temporal_filtering/${FULLID_file}_residual.nii.gz \

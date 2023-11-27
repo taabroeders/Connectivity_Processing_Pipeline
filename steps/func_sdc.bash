@@ -43,7 +43,7 @@ outputdir=${PWD}/func/${FULLID_folder}
 [ -f ${outputdir}/SynBOLD_DisCo/output/BOLD_u.nii.gz ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #----------------------------------------------------------------------
 #                         SynBOLD-DisCo

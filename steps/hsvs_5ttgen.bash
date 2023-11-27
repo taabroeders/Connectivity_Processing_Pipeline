@@ -43,7 +43,7 @@ lesionmask=$6
 [ -f anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_cerebellum_anat.nii.gz ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #Create output folder
 mkdir -p anat/${FULLID_folder}/hsvs_5tt &&\
@@ -56,8 +56,9 @@ echo "Performing 5TT segmentations..." &&\
 
 #Fix failed cases
 if [ ! -f anat/${FULLID_folder}/hsvs_5tt/all_segmentations/first_all_none_firstseg.nii.gz ];then
-    bash ${FILEDIR}/fix_first_hsvs.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${FILEDIR}
+    bash ${FILEDIR}/fix_first_hsvs.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${FILEDIR} || exit 1
 else
+
     for ii in first.logs/*.e*;do
         if [ -s $ii ];then
             echo "WARNING: FIRST completed but error logs non-empty. Check output thoroughly!";break
@@ -65,8 +66,9 @@ else
     done
 
     for vessel in anat/${FULLID_folder}/hsvs_5tt/all_segmentations/*vessel.mif;do
-        [ $(mrstats -mask ${vessel} -output count ${vessel}) -gt 0 ] &&\
+        if [ $(mrstats -mask ${vessel} -output count ${vessel}) -gt 0 ];then
         bash ${FILEDIR}/fix_hsvs_issue.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${FILEDIR} ${vessel} || exit 1 && break
+        fi
     done
 fi
 

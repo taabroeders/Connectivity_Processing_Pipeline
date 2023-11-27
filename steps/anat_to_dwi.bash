@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=anat2dwi           #a convenient name for your job
+#SBATCH --job-name=anat_to_dwi           #a convenient name for your job
 #SBATCH --mem=40G                     #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=6      	      #max CPU cores per process
@@ -40,7 +40,7 @@ FILEDIR=$3/files
 [ -f dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_gmwmi_dwi.nii.gz ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #Create output folder
 mkdir -p dwi/${FULLID_folder}/anat2dwi/reg &&\

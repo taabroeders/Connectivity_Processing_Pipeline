@@ -1,0 +1,11 @@
+name: preproc_env_ica
+channels:
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=main
+  - _openmp_mutex=5.1=1_gnu
+  - future
+  - matplotlib==2.2
+  - numpy==1.14
+  - pandas==0.23
+  - seaborn==0.9.0

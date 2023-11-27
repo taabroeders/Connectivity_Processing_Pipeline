@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=Func2Std           #a convenient name for your job
+#SBATCH --job-name=func_to_std        #a convenient name for your job
 #SBATCH --mem=400                     #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	  #max CPU cores per process
@@ -39,7 +39,7 @@ FULLID_file=$2
 [ -f func/${FULLID_folder}/${FULLID_file}_preprocessed_func2std.nii.gz ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 echo "Transforming functional data to standard-space..."
 

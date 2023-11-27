@@ -45,7 +45,7 @@ dwi_bvec=${dwi_nii%%.nii.gz}.bvec
 [ -f dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_sift2weights.csv ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #Create output folder
 mkdir -p dwi/${FULLID_folder}/tractography/tracts &&\
@@ -67,8 +67,8 @@ dwi2response dhollander dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_
              ${dwi_bval} &&\
 
 #Single-shell 3-tissue constrianed spherical deconvolution
-eval "$(conda shell.bash hook)" &&\
-conda activate ${FILEDIR}/preproc_env &&\
+# eval "$(conda shell.bash hook)" &&\
+# conda activate ${FILEDIR}/preproc_env_tract &&\
 
 export PATH=$PATH:${FILEDIR}/MRtrix3Tissue/bin &&\
 
@@ -81,7 +81,7 @@ ss3t_csd_beta1 dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_preproces
                dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_csfFOD.nii.gz \
                -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain_mask.nii.gz &&\
 
-conda deactivate &&\
+# conda deactivate &&\
 
 #Remove .mif file to save storage space
 rm dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_preprocessed_dwi.mif &&\

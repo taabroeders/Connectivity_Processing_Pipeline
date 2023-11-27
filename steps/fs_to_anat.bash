@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH --job-name=FS2Anat            #a convenient name for your job
+#SBATCH --job-name=fs_to_anat         #a convenient name for your job
 #SBATCH --mem=2500                    #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
-#SBATCH --cpus-per-task=1      	      #max CPU cores per process
+#SBATCH --cpus-per-task=1      	  #max CPU cores per process
 #SBATCH --time=0:30:00                #time limit (H:MM:SS)
 #SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
@@ -44,7 +44,7 @@ SUBJECTS_DIR=freesurfer
 [ -f anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_brain_anat.nii.gz ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n\n"
+printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 #Create output folder
 mkdir -p anat/${FULLID_folder}/FS_to_t1 &&\

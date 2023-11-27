@@ -1,4 +1,4 @@
-preproc_env/
+preproc_env*/
 ICA-AROMA/
 MRtrix3Tissue/
 niftyseg/

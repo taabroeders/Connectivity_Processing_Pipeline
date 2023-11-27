@@ -31,10 +31,12 @@ printf "\nHOW TO USE:\nbash Full_preProcessing.bash -i <input_folder> -o <output
 Required arguments:
   -i [or --input] <input-folder>
   -o [or --output] <output-folder>
+  note: the input-folder is subject/session-specific and the output-folder is not. The subject (+session) subfolders will be automatically created in the output-folder.
 Optional arguments:
   --remove_vols [or --remove-vols] <n>               remove first <n> volumes (func. preprocessing) default=0
   --freesurfer <freesufer-folder>                    use output folder of previous freesurfer run (anat. prepocessing)
-  --lesion-mask <lesion-mask>                        use lesion mask (t1 space) (diff. pipeline) default=[no lesions]
+  --lesion-filled <lesion-filled T1>                 use already lesion-filled t1 (anat. preprocessing) default=[nu lesion-filled]
+  --lesion-mask <lesion-mask>                        use lesion mask (t1 space) for lesion filling (if no lesion-filled provided) and improved tractography default=[no lesions]
   --func-sdc                                         perform fieldmap-less distortion correction on the functional data (experimental)
 Flags:
   -a perform anatomical preprocessing
@@ -91,7 +93,7 @@ for logs in ${output_fldr}/logs/*.out;do
   sublog=$(grep -l "####$(echo ${FULLID_fldr} | sed 's|/|: |')####" $(realpath ${logs}))
   [ -z ${sublog} ] || mv ${sublog} ${output_fldr}/logs/${FULLID_fldr}
 done
-[ -f ${output_fldr}/dcgm-gpu-stats*.out ] && rm ${output_fldr}/dcgm-gpu-stats*.out
+[ $(ls -1 ${output_fldr}/dcgm-gpu-stats*.out 2>/dev/null | wc -l) -gt 0 ] && rm ${output_fldr}/dcgm-gpu-stats*.out
 }
 
 print_error() {
@@ -124,6 +126,7 @@ input_folder='' #input folder
 output_folder='' #output folder
 freesurfer_input='' #location of freesurfer input
 lesionmask='' #location of lesion mask
+lesionfilled='' #location of lesion-filled T1
 remove_vols=0 #remove #n dummy volumes for functional preprocessing
 func_sdc=0 #perform experimental fieldmap-less distortion correction on functional data
 SUBID='' #subject identifier
@@ -140,8 +143,9 @@ while [ $# -gt 0 ] ; do
     -o | --output) output_folder=$(realpath "$2"); shift ;;
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
-    --lesion-mask) lesionmask=$(realpath "$2"); shift ;;
-    --func-sdc) func_sdc=1 ;;
+    --lesion-mask | lesion_mask) lesionmask=$(realpath "$2"); shift ;;
+    --lesion-filled | lesion_filled) lesionfilled=$(realpath "$2"); shift ;;
+    --func-sdc | func_sdc) func_sdc=1 ;;
     -h|-\?|--help) print_usage ;;
     -?*) printf 'ERROR: Unknown option %s\n\n' "$1"; print_help ;;
     *) break ;;
@@ -235,9 +239,13 @@ printf 'Anatomical preprocessing\n'
 printf %"$(tput cols)"s |tr " " "-"; printf "\n"
 
 # lesion filling
-if [ ! -z ${lesionmask} ]; then
+if [ ! -z ${lesionmask} ] && [ -z ${lesionfilled} ]; then
+  echo "Performing lesion-filling..."
   anatomical=${output_folder}/anat/${FULLID_folder}/lesion_filling/${FULLID_file}_lesionfilled_anat.nii.gz
   sbatch --wait ${scriptfolder}/steps/lesionfilling.bash ${anatomical_raw} ${lesionmask} ${scriptfolder} ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
+  elif [ ! -z ${lesionfilled} ]; then
+  echo "The provided lesion-filled T1 will be used for processing"
+  anatomical=${lesionfilled}
   else
   anatomical=${anatomical_raw}
   echo "No lesion mask provided. Skipping lesion-filling..."
@@ -265,7 +273,7 @@ else
   echo "  Mapping BNA cortical parcellations to FS subject-space..." &&\
   sbatch --wait ${scriptfolder}/steps/atlas_fs.bash ${scriptfolder} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
   echo "  Mapping parcellations and segmentations to T1 space..." &&\
-  sbatch --wait ${scriptfolder}/steps/fs_to_t1.bash ${anatomical} ${anatomical_noneck} ${anatomical_brain} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
+  sbatch --wait ${scriptfolder}/steps/fs_to_anat.bash ${anatomical} ${anatomical_noneck} ${anatomical_brain} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
   echo "  Performing hybrid 5TT segmentations..." &&\
   sbatch --wait ${scriptfolder}/steps/hsvs_5ttgen.bash ${anatomical_noneck} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} ${scriptfolder} ${lesionmask} &&\
   echo "  Mapping BNA to T1 space..." &&\
@@ -334,7 +342,8 @@ if [ -f ${output_folder}/dwi/${FULLID_folder}/atlas/BNA_Atlas_FA.csv ]; then
 else
   echo "Starting processing of diffusion weighted data..."
   echo "  Starting diffusion preprocessing..." &&\
-  sbatch --wait ${scriptfolder}/steps/dwi_preproc.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${scriptfolder} &&\
+  sbatch --wait ${scriptfolder}/steps/dwi_preproc1.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${scriptfolder} &&\
+  sbatch --wait ${scriptfolder}/steps/dwi_preproc2.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${scriptfolder} &&\
   echo "  Starting diffusion reconstruction..." &&\
   sbatch --wait ${scriptfolder}/steps/dwi_recon.bash ${input_folder} ${FULLID_file} ${FULLID_folder} &&\
   echo "  Transforming 5TT segmentations to dwi and create GM/WM interface..." &&\
