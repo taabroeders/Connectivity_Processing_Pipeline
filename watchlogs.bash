@@ -38,8 +38,6 @@ while [ $(ls -1 ${logs_folder}/*.out 2>/dev/null | wc -l) -gt 0 ];do
     prev_log=${latest_log}
     watch -e "
     [ -f ${latest_log} ] || exit 1;
-    if [ $(cat ${latest_log} | tail -n1 | grep -q '#### Done! ####') ]; then
-    echo 'Note: this script completed. Press any key to continue. It may take a few seconds before the next log file has loaded.'; exit 1;
-    fi;
+    cat ${latest_log} | tail -n1 | grep -q '#### Done! ####' && exit
     printf 'Current log: $(realpath ${latest_log})\t(2× ctrl+c to exit)\n\n'; cat ${latest_log} | tail -n $(($(tput lines) - 4))"
 done
