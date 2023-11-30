@@ -81,4 +81,4 @@ echo "  Creating GM/WM interface..." &&\
 5tt2gmwmi dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_5tthsvs_dwi_lesions.nii.gz \
           dwi/${FULLID_folder}/anat2dwi/hsvs_5tt/${FULLID_file}_gmwmi_dwi.nii.gz &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

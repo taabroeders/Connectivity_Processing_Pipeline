@@ -68,7 +68,7 @@ singularity run -e -B func/${FULLID_folder}/SynBOLD_DisCo:/tmp \
              --skull_stripped
 
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"
 
 #----------------------------------------------------------------------
 #                       References, links, others, ...   

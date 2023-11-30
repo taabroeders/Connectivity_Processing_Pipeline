@@ -55,5 +55,4 @@ ${FILEDIR}/niftyseg/bin/seg_FillLesions \
     -l ${lesion_mask} \
     -o anat/${FULLID_folder}/lesion_filling/${FULLID_file}_lesionfilled_anat.nii.gz &&\
 
-printf "\n#### Done! ####\n"
-
+printf "\n\n$(date)\n#### Done! ####\n"

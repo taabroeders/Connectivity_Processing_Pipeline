@@ -66,4 +66,4 @@ tensor2metric dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_tensor.nii.
               -rd dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_RD.nii.gz \
               -vector dwi/${FULLID_folder}/reconstruction/${FULLID_file}_dwi_V1.nii.gz &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

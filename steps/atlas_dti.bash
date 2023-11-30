@@ -118,4 +118,4 @@ tck2connectome -symmetric -zero_diagonal \
                -scale_file dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_meanFAweights.csv \
                -stat_edge mean &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

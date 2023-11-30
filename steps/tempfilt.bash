@@ -75,4 +75,4 @@ fslmaths func/${FULLID_folder}/temporal_filtering/${FULLID_file}_residual.nii.gz
 ln -s temporal_filtering/${FULLID_file}_denoised_func_data_nonaggr_hptf_func.nii.gz \
       func/${FULLID_folder}/${FULLID_file}_preprocessed_func.nii.gz &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

@@ -44,7 +44,7 @@ printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 echo "Starting freesurfer processing..." &&\
 recon-all -subjid ${FULLID} -i ${T1} -all &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"
 
 #----------------------------------------------------------------------
 #                       References, links, others, ...   

@@ -124,4 +124,4 @@ dwibiascorrect ants \
 ln -s ${FULLID_file}_eddy_unwarped_biascor_dwi.nii.gz \
       dwi/${FULLID_folder}/preprocessing/${FULLID_file}_preprocessed_dwi.nii.gz &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

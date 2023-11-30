@@ -54,7 +54,7 @@ ${FILEDIR}/preproc_env_ica/bin/python ${FILEDIR}/ICA-AROMA/ICA_AROMA.py \
        -out ${PWD}/func/${FULLID}/ICA_AROMA/ &&\
 conda deactivate &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"
 
 #----------------------------------------------------------------------
 #                       References, links, others, ...   

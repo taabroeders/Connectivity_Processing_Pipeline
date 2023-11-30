@@ -111,7 +111,7 @@ tckedit dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_10M_ifod2
         -number 200k \
         dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_tracks_200k_ifod2.tck &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"
 
 #----------------------------------------------------------------------
 #                       References, links, others, ...   

@@ -130,19 +130,19 @@ mri_vol2vol --mov anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_cut_dil
             --no-save-reg --nearest &&\
 
 #create GM/WM/CSF segmentations
-# mri_compute_volume_fractions --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac --regheader \
-#                              ${FULLID_file} ${freesurfer_folder}/mri/norm.mgz &&\
-# 
-#Segmentations to T1
-# B='cortex csf subcort_gm wm'
-# for b in ${B}; do
-# mri_convert anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}.mgz \
-#             anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}.nii.gz &&\
+mri_compute_volume_fractions --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac --regheader \
+                             ${FULLID_file} ${freesurfer_folder}/mri/norm.mgz &&\
 
-# mri_vol2vol --mov anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}.nii.gz \
-#             --targ ${anatomical} \
-#             --regheader --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}_t1.nii.gz --no-save-reg || exit 1
-# done
+# Segmentations to T1
+B='cortex csf subcort_gm wm'
+for b in ${B}; do
+mri_convert anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}.mgz \
+            anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}.nii.gz &&\
+
+mri_vol2vol --mov anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}.nii.gz \
+            --targ ${anatomical} \
+            --regheader --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac.${b}_t1.nii.gz --no-save-reg || exit 1
+done
 
 #destrieux atlas
 mri_vol2vol --mov ${freesurfer_folder}/mri/aparc.a2009s+aseg.mgz \
@@ -178,4 +178,4 @@ ln -s FS_to_t1/${FULLID_file}_brain_anat.nii.gz \
 ln -s FS_to_t1/${FULLID_file}_brainmask_anat.nii.gz \
       ${anatomical_brain%%.nii.gz}_mask.nii.gz &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

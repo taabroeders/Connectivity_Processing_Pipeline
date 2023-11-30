@@ -61,4 +61,4 @@ applywarp --ref=func/${FULLID_folder}/fmri.feat/reg/standard_4mm.nii.gz \
           --premat=func/${FULLID_folder}/fmri.feat/reg/example_func2highres.mat \
           --interp=trilinear &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

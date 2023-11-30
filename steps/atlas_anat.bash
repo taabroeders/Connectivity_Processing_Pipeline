@@ -92,4 +92,4 @@ fslmerge -t anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz 
 fslmaths anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz -Tmax \
          anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

@@ -148,4 +148,4 @@ mrcat ${b0pair_samePE} ${b0pair_otherPE} dwi/${FULLID_folder}/preprocessing/${FU
 
 fi
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

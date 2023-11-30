@@ -118,4 +118,4 @@ paste func/${FULLID_folder}/nuisance/${FULLID_file}_wm_in_func_timeseries \
       func/${FULLID_folder}/nuisance/${FULLID_file}_ventricles_in_func_timeseries \
       > func/${FULLID_folder}/nuisance/${FULLID_file}_nuisance_timeseries &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

@@ -8,7 +8,8 @@
 #@email:  t.broeders@amsterdamumc.nl
 #updated: 30 11 2023
 #status: still being developed
-#to-do: 
+#to-do: [check] how to handle overwriting previous partial runs
+#       [optional] improve efficiency of continuing previous run
 
 #Review History
 #Reviewed by -
@@ -226,6 +227,7 @@ freesurfer_folder=${output_folder}/freesurfer/${FULLID_file}
 printf %"$(tput cols)"s |tr " " "#"; printf "\n"
 echo "Processing $(echo ${FULLID_folder} | sed 's|/|: |')"
 printf %"$(tput cols)"s |tr " " "#"; printf "\n"
+printf "Run '${scriptfolder}/watchlogs.bash ${output_folder} sub-${SUBID} ses-${SESID}' to view logs in real-time\n"
 
 #----------------------------------------------------------------------
 #                Anatomical preprocessing

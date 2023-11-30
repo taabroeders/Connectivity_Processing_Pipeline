@@ -72,4 +72,4 @@ fslmeants -i func/${FULLID_folder}/${FULLID_file}_preprocessed_func.nii.gz \
 ln -s atlas/${FULLID_file}_BNA_timeseries.txt \
       func/${FULLID_folder}/${FULLID_file}_BNA_timeseries.txt &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

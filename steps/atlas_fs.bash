@@ -72,4 +72,4 @@ mris_anatomical_stats -mgz -cortex ${freesurfer_folder}/label/rh.cortex.label -f
                       anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_rh.BN_Atlas.stats -b -a ${PWD}/anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_rh.BN_Atlas.annot -c \
                       ${scriptfolder}/files/BN_Atlas_210_LUT.txt ${FULLID_file} rh white &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"

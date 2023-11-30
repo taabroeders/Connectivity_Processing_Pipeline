@@ -84,7 +84,7 @@ rm ${outputdir}/feat_settings.fsf &&\
 #change permissions (bug)
 chmod -R u+rwx ${outputdir}/fmri.feat
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"
 
 #----------------------------------------------------------------------
 #                       References, links, others, ...   

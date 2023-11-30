@@ -115,7 +115,7 @@ tar -czf anat/${FULLID_folder}/hsvs_5tt/all_segmentations.tar.gz \
 
 rm -r anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ &&\
 
-printf "\n#### Done! ####\n"
+printf "\n\n$(date)\n#### Done! ####\n"
 
 #----------------------------------------------------------------------
 #                       References, links, others, ...   
