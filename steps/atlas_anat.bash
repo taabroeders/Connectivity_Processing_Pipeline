@@ -15,9 +15,10 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 03 04 2023
+#updated: 30 11 2023
 #status: still being developed
-#to-do: add comments for individual steps
+#to-do: [optional] fancier overlap fix for DGM regions (see fs_to_anat.bash)
+#       [optional] add compatibility with other atlasses
 
 #Review History
 #Reviewed by -
@@ -57,7 +58,6 @@ fslmaths anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_t1.nii.gz -dilD 
          anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_t1_dil_GMmasked.nii.gz &&\
 
 ##add cerebellum and subcortical segmentations to transformed atlas
-
 #create cerebellum mask
 fslmaths anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_cerebellum_anat.nii.gz -bin \
          -mul 225 anat/${FULLID_folder}/atlas/${FULLID_file}_225_cerebellum_LR.nii.gz &&\
@@ -65,7 +65,8 @@ fslmaths anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_cerebellum_anat.nii.gz -b
 #for readability
 subcortseg=anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_first_all_none_firstseg_anat.nii.gz &&\
 
-##create masks for subcortical segmentations
+##create masks for subcortical segmentations and combine them
+#create individual masks
 fslmaths ${subcortseg} -thr 10 -uthr 10 -bin -mul 211 anat/${FULLID_folder}/atlas/${FULLID_file}_211_thalamus_L.nii.gz && \
 fslmaths ${subcortseg} -thr 11 -uthr 11 -bin -mul 212 anat/${FULLID_folder}/atlas/${FULLID_file}_212_caudate_L.nii.gz && \
 fslmaths ${subcortseg} -thr 12 -uthr 12 -bin -mul 213 anat/${FULLID_folder}/atlas/${FULLID_file}_213_putamen_L.nii.gz && \
@@ -81,12 +82,13 @@ fslmaths ${subcortseg} -thr 53 -uthr 53 -bin -mul 222 anat/${FULLID_folder}/atla
 fslmaths ${subcortseg} -thr 54 -uthr 54 -bin -mul 223 anat/${FULLID_folder}/atlas/${FULLID_file}_223_amygdala_R.nii.gz && \
 fslmaths ${subcortseg} -thr 58 -uthr 58 -bin -mul 224 anat/${FULLID_folder}/atlas/${FULLID_file}_224_accumbens_R.nii.gz &&\
 
+#combine masks
 firstregs=$(ls anat/${FULLID_folder}/atlas/${FULLID_file}_2*.nii.gz) &&\
-
 fslmerge -t anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz \
          anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_t1_dil_GMmasked.nii.gz \
          ${firstregs[@]} &&\
 
+#remove possible overlap between regions
 fslmaths anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz -Tmax \
          anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz &&\
 

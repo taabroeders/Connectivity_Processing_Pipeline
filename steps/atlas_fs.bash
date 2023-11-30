@@ -15,9 +15,9 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 03 04 2023
+#updated: 30 11 2023
 #status: still being developed
-#to-do: add comments for individual steps
+#to-do: [optional] add compatibility with other atlasses
 
 #Review History
 #Reviewed by -
@@ -50,20 +50,24 @@ mkdir -p anat/${FULLID_folder}/Atlas_to_FS &&\
 #Map BNA to Freesurfer space
 echo "Mapping BNA cortical parcellations to FS subject-space..." &&\
 
+#produce annotation file LH
 mris_ca_label -t ${scriptfolder}/files/BN_Atlas_210_LUT.txt \
               ${FULLID_file} lh ${freesurfer_folder}/surf/lh.sphere.reg \
               ${scriptfolder}/files/lh.BN_Atlas.gcs \
               anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_lh.BN_Atlas.annot &&\
 
+#produce annotation file RH
 mris_ca_label -t ${scriptfolder}/files/BN_Atlas_210_LUT.txt \
               ${FULLID_file} rh ${freesurfer_folder}/surf/rh.sphere.reg \
               ${scriptfolder}/files/rh.BN_Atlas.gcs \
               anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_rh.BN_Atlas.annot &&\
 
+#quantify anatomical properties LH
 mris_anatomical_stats -mgz -cortex ${freesurfer_folder}/label/lh.cortex.label -f \
                       anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_lh.BN_Atlas.stats -b -a ${PWD}/anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_lh.BN_Atlas.annot -c \
                       ${scriptfolder}/files/BN_Atlas_210_LUT.txt ${FULLID_file} lh white &&\
 
+#quantify anatomical properties RH
 mris_anatomical_stats -mgz -cortex ${freesurfer_folder}/label/rh.cortex.label -f \
                       anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_rh.BN_Atlas.stats -b -a ${PWD}/anat/${FULLID_folder}/Atlas_to_FS/${FULLID_file}_rh.BN_Atlas.annot -c \
                       ${scriptfolder}/files/BN_Atlas_210_LUT.txt ${FULLID_file} rh white &&\

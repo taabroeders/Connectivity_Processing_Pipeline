@@ -15,8 +15,9 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 03 04 2023
-#status: Done
+#updated: 30 11 2023
+#status: still being developed
+#to do: [optional] check how easy the conda environment implementation is
 
 #Review History
 #Reviewed by -

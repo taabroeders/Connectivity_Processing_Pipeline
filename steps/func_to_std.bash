@@ -15,9 +15,9 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 03 04 2023
+#updated: 30 11 2023
 #status: still being developed
-#to-do: add comments for individual steps
+#to-do: [optional] remove extra ECM-specific steps to avoid confusion
 
 #Review History
 #Reviewed by -
@@ -43,13 +43,17 @@ printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 
 echo "Transforming functional data to standard-space..."
 
+#apply the previously computed registration parameters to the fMRI data
 featregapply func/${FULLID_folder}/fmri.feat &&\
 
+#Extra steps to allow voxel-wise ECM
+#create a 4mm standard-space image (for voxel-wise ECM)
 flirt -ref func/${FULLID_folder}/fmri.feat/reg/standard.nii.gz \
       -in func/${FULLID_folder}/fmri.feat/reg/standard.nii.gz \
       -out func/${FULLID_folder}/fmri.feat/reg/standard_4mm.nii.gz \
       -applyisoxfm 4 &&\
 
+#register fMRI to standard space
 applywarp --ref=func/${FULLID_folder}/fmri.feat/reg/standard_4mm.nii.gz \
           --in=func/${FULLID_folder}/${FULLID_file}_preprocessed_func.nii.gz \
           --out=func/${FULLID_folder}/${FULLID_file}_preprocessed_func2std.nii.gz \

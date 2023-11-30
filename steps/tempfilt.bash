@@ -15,9 +15,10 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 03 04 2023
+#updated: 30 11 2023
 #status: still being developed
-#to-do: add comments for individual steps
+#to-do: check whether this is the right temporal filtering cut-off
+#       [optional] add flexibility to filter motion parameters and perform scrubbing
 
 #Review History
 #Reviewed by -

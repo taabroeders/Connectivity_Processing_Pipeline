@@ -15,9 +15,9 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 25 04 2023
+#updated: 30 11 2023
 #status: still being developed
-#to-do: add comments for individual steps
+#to-do: [optional] create volumetric report
 
 #Review History
 #Reviewed by -
@@ -36,7 +36,7 @@ anatomical=$1
 FREESURFER_DIR=$2
 FULLID_folder=$3
 FULLID_file=$4
-FILEDIR=$5/files
+STEPSDIR=$5/steps
 lesionmask=$6
 
 #Check if script has already been completed
@@ -56,7 +56,8 @@ echo "Performing 5TT segmentations..." &&\
 
 #Fix failed cases
 if [ ! -f anat/${FULLID_folder}/hsvs_5tt/all_segmentations/first_all_none_firstseg.nii.gz ];then
-    bash ${FILEDIR}/fix_first_hsvs.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${FILEDIR} || exit 1
+    bash ${STEPSDIR}/fix_hsvs_issues/fix_first_hsvs.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ \
+    ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${STEPSDIR} || exit 1
 else
 
     for ii in first.logs/*.e*;do
@@ -67,7 +68,8 @@ else
 
     for vessel in anat/${FULLID_folder}/hsvs_5tt/all_segmentations/*vessel.mif;do
         if [ $(mrstats -mask ${vessel} -output count ${vessel}) -gt 0 ];then
-        bash ${FILEDIR}/fix_hsvs_issue.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${FILEDIR} ${vessel} || exit 1 && break
+        bash ${STEPSDIR}/fix_hsvs_issues/fix_vessel_issue.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ \
+        ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${vessel} || exit 1 && break
         fi
     done
 fi

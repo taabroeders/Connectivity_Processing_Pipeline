@@ -6,11 +6,9 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 21 06 2023
+#updated: 30 11 2023
 #status: still being developed
-#to-do: 1. Include option for different brain extraction
-#       2. Improve BIDS derivatives format "KNW-Connect"? (https://bids-specification.readthedocs.io/en/stable/05-derivatives/03-imaging.html)
-#       3. Allow freesurfer folder as variable instead of copying/ symbolic link?
+#to-do: 
 
 #Review History
 #Reviewed by -
@@ -19,9 +17,9 @@
 # - This code will make it possible to perform anatomical, functional and 
 #   diffusion preprocessing for functional and/or diffusion connectivity studies 
 #
-# - Prerequisites: A BIDS folder structure is required, the quality of the input data needs to be checked beforehand and lesion filling needs to be performed
+# - Prerequisites: A BIDS folder structure is required, the quality of the input data needs to be checked beforehand
 # - Input: T1w, fMRI and/or dwi(+bval&bvec)
-# - Output: Anatomical segmentations, fMRI timeseries and diffusion-based connectivity
+# - Output: Anatomical segmentations, fMRI timeseries and/or diffusion-based connectivity
 #----------------------------------------------------------------------
 
 print_usage() {
@@ -31,7 +29,7 @@ printf "\nHOW TO USE:\nbash Full_preProcessing.bash -i <input_folder> -o <output
 Required arguments:
   -i [or --input] <input-folder>
   -o [or --output] <output-folder>
-  note: the input-folder is subject/session-specific and the output-folder is not. The subject (+session) subfolders will be automatically created in the output-folder.
+  Note: the input-folder is subject/session-specific and the output-folder is not. The subject (+session) subfolders will be automatically created in the output-folder.
 Optional arguments:
   --remove_vols [or --remove-vols] <n>               remove first <n> volumes (func. preprocessing) default=0
   --freesurfer <freesufer-folder>                    use output folder of previous freesurfer run (anat. prepocessing)

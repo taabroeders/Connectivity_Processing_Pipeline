@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=anat_to_dwi           #a convenient name for your job
+#SBATCH --job-name=anat_to_dwi        #a convenient name for your job
 #SBATCH --mem=40G                     #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=6      	      #max CPU cores per process
@@ -15,9 +15,9 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 04 05 2023
+#updated: 30 11 2023
 #status: still being developed
-#to-do: ANTs registration?
+#to-do: 
 
 #Review History
 #Reviewed by -

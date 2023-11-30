@@ -15,9 +15,9 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 04 05 2023
+#updated: 30 11 2023
 #status: still being developed
-#to-do: -
+#to-do: [check] removed conda environment as it did not seem needed, is this correct?
 
 #Review History
 #Reviewed by -
@@ -67,6 +67,7 @@ dwi2response dhollander dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_
              ${dwi_bval} &&\
 
 #Single-shell 3-tissue constrianed spherical deconvolution
+
 # eval "$(conda shell.bash hook)" &&\
 # conda activate ${FILEDIR}/preproc_env_tract &&\
 

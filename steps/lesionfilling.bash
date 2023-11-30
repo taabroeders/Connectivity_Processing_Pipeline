@@ -15,8 +15,10 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 04 05 2023
-#status: done
+#updated: 30 11 2023
+#status: still being developed
+#to do: [optional] add lesion segmentation?
+#       [optional] other filling tool?
 
 #Review History
 #Reviewed by Ismail Koubiyr (25 04 2023)

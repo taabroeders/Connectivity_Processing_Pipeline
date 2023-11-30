@@ -3,7 +3,7 @@
 #SBATCH --job-name=atlas_dti          #a convenient name for your job
 #SBATCH --mem=300M                    #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
-#SBATCH --cpus-per-task=2      	  #max CPU cores per process
+#SBATCH --cpus-per-task=2      	      #max CPU cores per process
 #SBATCH --time=0:10:00                #time limit (H:MM:SS)
 #SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
@@ -15,9 +15,9 @@
 
 #@author: Tommy Broeders
 #@email:  t.broeders@amsterdamumc.nl
-#updated: 04 05 2023
+#updated: 30 11 2023
 #status: still being developed
-#to-do: Add compatibility with other atlasses
+#to-do: [optional] add compatibility with other atlasses
 
 #Review History
 #Reviewed by -

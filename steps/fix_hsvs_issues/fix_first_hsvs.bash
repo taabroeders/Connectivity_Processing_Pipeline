@@ -3,7 +3,7 @@
 SEGFOLDER=$(realpath $1)
 FREESURFER_DIR=$(realpath $2)
 output_file=$(realpath $3)
-FILEDIR=$4
+STEPSDIR=$4
 
 echo " WARNING: HSVS issue detected. Applying in-house written fix by rerunning first..."
 
@@ -70,11 +70,11 @@ mrcalc - 1.0 -min tissue2_init.mif -force
 #Check for vessel issue 
 for vessel in *vessel.mif;do
     if [ $(mrstats -mask ${vessel} -output count ${vessel}) -gt 0 ]; then
-    bash ${FILEDIR}/fix_hsvs_issue.bash ${SEGFOLDER} ${FREESURFER_DIR} ${output_file} ${vessel} || exit 1 && exit 0
+    bash ${STEPSDIR}/fix_hsvs_issues/fix_vessel_issue.bash ${SEGFOLDER} ${FREESURFER_DIR} ${output_file} ${vessel} || exit 1 && exit 0
     fi
 done
 
-#If not observed, overwrite subsequent fiels
+#If vessel issue is not observed, overwrite subsequent fiels
 mrmath Left-Inf-Lat-Vent.mif 3rd-Ventricle.mif 4th-Ventricle.mif CSF.mif Left-vessel.mif Right-Inf-Lat-Vent.mif Right-vessel.mif 5th-Ventricle.mif \
 Left_LatVent_ChorPlex.mif Right_LatVent_ChorPlex.mif sum - | mrcalc - 1.0 -min tissue3_init.mif -force
 mrmath Left-Lesion.mif Right-Lesion.mif sum - | mrcalc - 1.0 -min tissue4.mif -force
