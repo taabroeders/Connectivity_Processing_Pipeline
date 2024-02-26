@@ -50,10 +50,6 @@ mkdir -p func/${FULLID_folder}/nuisance &&\
 echo "Creating the nuisance timeseries for the WM and CSF signal..." &&\
 echo "  Creating an epi-distortion mask..." &&\
 
-fslmaths func/${FULLID_folder}/ICA_AROMA/denoised_func_data_nonaggr.nii.gz \
-         -Tmin -thrP 25 -bin \
-         func/${FULLID_folder}/nuisance/${FULLID_file}_minmask.nii.gz &&\
-
 ##Create the WM mask
 echo "  Transforming WM mask to fMRI and extracting timeseries..." &&\
 
@@ -75,14 +71,9 @@ flirt -in func/${FULLID_folder}/nuisance/${FULLID_file}_5tthsvs_WMmask_anat_erod
       -out func/${FULLID_folder}/nuisance/${FULLID_file}_WMmask2func.nii.gz \
       -interp nearestneighbour &&\
 
-#Multiple with the minmask
-fslmaths func/${FULLID_folder}/nuisance/${FULLID_file}_WMmask2func.nii.gz \
-         -mul func/${FULLID_folder}/nuisance/${FULLID_file}_minmask.nii.gz \
-         func/${FULLID_folder}/nuisance/${FULLID_file}_WMmask2func_minmasked.nii.gz &&\
-
 #print average timeseries over all voxels in WM_nofirst-mask for all runs
 fslmeants -i func/${FULLID_folder}/ICA_AROMA/denoised_func_data_nonaggr.nii.gz \
-          -m func/${FULLID_folder}/nuisance/${FULLID_file}_WMmask2func_minmasked.nii.gz \
+          -m func/${FULLID_folder}/nuisance/${FULLID_file}_WMmask2func.nii.gz \
           -o func/${FULLID_folder}/nuisance/${FULLID_file}_wm_in_func_timeseries &&\
 
 ##create the CSF mask
@@ -101,15 +92,10 @@ flirt -in func/${FULLID_folder}/nuisance/${FULLID_file}_ventricle_mask-nofirst.n
       -init ${fmrifeat}/reg/highres2example_func.mat \
       -ref ${fmrifeat}/example_func.nii.gz \
       -out func/${FULLID_folder}/nuisance/${FULLID_file}_ventricle_mask-nofirst2func.nii.gz \
-      -interp nearestneighbour &&\
-
-fslmaths func/${FULLID_folder}/nuisance/${FULLID_file}_ventricle_mask-nofirst2func.nii.gz \
-         -mul func/${FULLID_folder}/nuisance/${FULLID_file}_minmask.nii.gz \
-         func/${FULLID_folder}/nuisance/${FULLID_file}_ventricle_mask-nofirst2func_minmasked.nii.gz &&\
 
 #print average timeseries over all voxels in CSF_nofirst_ventr-mask for all runs
 fslmeants -i func/${FULLID_folder}/ICA_AROMA/denoised_func_data_nonaggr.nii.gz \
-          -m func/${FULLID_folder}/nuisance/${FULLID_file}_ventricle_mask-nofirst2func_minmasked.nii.gz \
+          -m func/${FULLID_folder}/nuisance/${FULLID_file}_ventricle_mask-nofirst2func.nii.gz \
           -o func/${FULLID_folder}/nuisance/${FULLID_file}_ventricles_in_func_timeseries &&\
 
 ##combine timeseries into single file

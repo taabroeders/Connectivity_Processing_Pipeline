@@ -56,16 +56,11 @@ flirt -in anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz \
       -out func/${FULLID_folder}/atlas/${FULLID_file}_BNA_func.nii.gz \
       -interp nearestneighbour &&\
 
-#add epi mask to atlas
-fslmaths func/${FULLID_folder}/atlas/${FULLID_file}_BNA_func.nii.gz \
-         -mul func/${FULLID_folder}/nuisance/${FULLID_file}_minmask.nii.gz \
-         func/${FULLID_folder}/atlas/${FULLID_file}_BNA_func_min.nii.gz &&\
-
 ####create timeseries with atlas label####
 echo "  Creating timeseries per atlas region..." &&\
 
 fslmeants -i func/${FULLID_folder}/${FULLID_file}_preprocessed_func.nii.gz \
-          --label=func/${FULLID_folder}/atlas/${FULLID_file}_BNA_func_min.nii.gz \
+          --label=func/${FULLID_folder}/atlas/${FULLID_file}_BNA_func.nii.gz \
           -o func/${FULLID_folder}/atlas/${FULLID_file}_BNA_timeseries.txt &&\
 
 #create symbolic link with easier-to-find filename
