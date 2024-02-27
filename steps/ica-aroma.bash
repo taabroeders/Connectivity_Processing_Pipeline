@@ -41,7 +41,7 @@ FULLID=$3
 [ -d func/${FULLID}/ICA_AROMA ] && exit 0
 
 #Print the ID of the subject (& session if available)
-printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
+printf "####$(echo ${FULLID} | sed 's|/|: |')####\n$(date)\n\n"
 
 #for each functional scan-session
 echo "Running ICA-AROMA..." &&\

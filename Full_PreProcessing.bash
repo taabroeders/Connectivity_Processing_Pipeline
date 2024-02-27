@@ -33,8 +33,9 @@ Required arguments:
   Note: the input-folder is subject/session-specific and the output-folder is not. The subject (+session) subfolders will be automatically created in the output-folder.
 Optional arguments:
   --remove_vols [or --remove-vols] <n>               remove first <n> volumes (func. preprocessing) default=0
+  --slice_timing [or --slice-timing]                 perform slice_timing correction; default=[no slice-timing correction]
   --freesurfer <freesufer-folder>                    use output folder of previous freesurfer run (anat. prepocessing)
-  --lesion-filled <lesion-filled T1>                 use already lesion-filled t1 (anat. preprocessing) default=[nu lesion-filled]
+  --lesion-filled <lesion-filled T1>                 use already lesion-filled t1 (anat. preprocessing) default=[no lesion-filled]
   --lesion-mask <lesion-mask>                        use lesion mask (t1 space) for lesion filling (if no lesion-filled provided) and improved tractography default=[no lesions]
   --func-sdc                                         perform fieldmap-less distortion correction on the functional data (experimental)
 Flags:
@@ -51,6 +52,7 @@ sub-<subject#>/                                      <-- This is the <input-fold
       sub-<subject#>[_ses-<session#>]_T1w.nii.gz
     func/[optional]
       sub-<subject#>[_ses-<session#>]_task-rest_bold.nii.gz
+      sub-<subject#>[_ses-<session#>]_task-rest_bold.json
     dwi/[optional]
       sub-<subject#>[_ses-<session#>]_dwi.nii.gz
       sub-<subject#>[_ses-<session#>]_dwi.bval
@@ -127,6 +129,7 @@ freesurfer_input='' #location of freesurfer input
 lesionmask='' #location of lesion mask
 lesionfilled='' #location of lesion-filled T1
 remove_vols=0 #remove #n dummy volumes for functional preprocessing
+slice_timing=0 #perform slice-timing correction
 func_sdc=0 #perform experimental fieldmap-less distortion correction on functional data
 SUBID='' #subject identifier
 SESID='' #session identifier
@@ -141,6 +144,7 @@ while [ $# -gt 0 ] ; do
     -i | --input) input_folder=$(realpath "$2"); shift ;;
     -o | --output) output_folder=$(realpath "$2"); shift ;;
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
+    --slice_timing | --slice-timing) slice_timing=1 ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
     --lesion-mask | lesion_mask) lesionmask=$(realpath "$2"); shift ;;
     --lesion-filled | lesion_filled) lesionfilled=$(realpath "$2"); shift ;;
@@ -307,7 +311,7 @@ else
   sbatch --wait ${scriptfolder}/steps/func_sdc.bash ${anatomical_brain} ${fmri} ${scriptfolder} ${FULLID_file} ${FULLID_folder} || print_error ${output_folder} ${FULLID_folder}
   fi
   echo "  Performing FEAT..." &&\
-  sbatch --wait ${scriptfolder}/steps/feat.bash ${anatomical_noneck} ${anatomical_brain} ${fmri} ${scriptfolder} ${remove_vols} ${FULLID_folder} &&\
+  sbatch --wait ${scriptfolder}/steps/feat.bash ${anatomical_noneck} ${anatomical_brain} ${fmri} ${scriptfolder} ${remove_vols} ${slice_timing} ${FULLID_folder} &&\
   echo "  Running ICA-AROMA..." &&\
   sbatch --wait ${scriptfolder}/steps/ica-aroma.bash ${anatomical_brain} ${scriptfolder} ${FULLID_folder} &&\
   echo "  Computing the nuisance timeseries for the WM and CSF signal..." &&\

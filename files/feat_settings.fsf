@@ -100,7 +100,7 @@ set fmri(unwarp_dir) y-
 set fmri(st) 0
 
 # Slice timings file
-set fmri(st_file) ""
+set fmri(st_file) SLICE_ORDER_FILE
 
 # BET brain extraction
 set fmri(bet_yn) 1
