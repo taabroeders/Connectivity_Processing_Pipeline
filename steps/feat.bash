@@ -38,7 +38,7 @@ anatomical_brain=$2
 restingstate=$3
 subfolder=$4/files
 delete_vols=$5
-slice_timing=$6
+skip_slice_timing=$6
 FULLID_folder=$7
 outputdir=${PWD}/func/${FULLID_folder}
 restingstate_json=${restingstate%%.nii.gz}.json
@@ -73,7 +73,7 @@ sed -i 's|RESTINGSTATE|'${restingstate}'|' ${outputdir}/feat_settings.fsf &&\
 sed -i 's|NUMVOXELS|'${numvoxels}'|' ${outputdir}/feat_settings.fsf &&\
 sed -i 's|STANDARDBRAIN|"'${FSLDIR}'/data/standard/MNI152_T1_2mm_brain"|' ${outputdir}/feat_settings.fsf &&\
 sed -i 's|OUTPUTDIR|"'${outputdir}'/fmri.feat"|' ${outputdir}/feat_settings.fsf &&\
-if [ ${slice_timing} ];then
+if [ ! ${skip_slice_timing} ];then
     jq '.SliceTiming[]' ${restingstate_json} | tr -d '[,]'| awk 'NF' > ${outputdir}/slicetime_tmp.txt &&\
     cat -n ${outputdir}/slicetime_tmp.txt | sort -nsk2,2 | awk '{print $1}' > ${outputdir}/slice_order.txt &&\
     rm ${outputdir}/slicetime_tmp.txt &&\
@@ -83,7 +83,9 @@ fi
 
 #copy anatomical to same folder as anatomical (required for feat to work)
 anatomical_feat_location=$(remove_ext ${anatomical_brain} | sed 's/_brain$//')".nii.gz" &&\
-[ ${anatomical}==${anatomical_feat_location} ] || cp ${anatomical} ${anatomical_feat_location} &&\
+if [ ! -f ${anatomical_feat_location} ] && [ ! ${anatomical}==${anatomical_feat_location} ]; then
+    cp ${anatomical} ${anatomical_feat_location}
+fi
 
 ##run FEAT
 printf "Performing FEAT...\n" &&\

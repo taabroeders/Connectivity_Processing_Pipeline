@@ -56,12 +56,17 @@ flirt -in anat/${FULLID_folder}/atlas/${FULLID_file}_BNA2highres_FIRST.nii.gz \
       -out func/${FULLID_folder}/atlas/${FULLID_file}_BNA_func.nii.gz \
       -interp nearestneighbour &&\
 
-####create timeseries with atlas label####
+####create timeseries and connectivity matrix with atlas label####
 echo "  Creating timeseries per atlas region..." &&\
 
 fslmeants -i func/${FULLID_folder}/${FULLID_file}_preprocessed_func.nii.gz \
           --label=func/${FULLID_folder}/atlas/${FULLID_file}_BNA_func.nii.gz \
           -o func/${FULLID_folder}/atlas/${FULLID_file}_BNA_timeseries.txt &&\
+
+eval "$(conda shell.bash hook)" &&\
+conda activate ${FILEDIR}/preproc_env_ica &&\
+${FILEDIR}/preproc_env_ica/bin/python -c "import pandas as pd;df = pd.read_csv('func/${FULLID_folder}/atlas/${FULLID_file}_BNA_timeseries.txt', sep='  ', decimal=',', engine='python');print(df.corr().to_string(index=False, header=False))" >> func/${FULLID_folder}/atlas/${FULLID_file}_BNA_connectivity.txt &&\
+conda deactivate &&\
 
 #create symbolic link with easier-to-find filename
 ln -s atlas/${FULLID_file}_BNA_timeseries.txt \
