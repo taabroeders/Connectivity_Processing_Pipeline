@@ -100,22 +100,8 @@ printf "Try: 'bash Full_preProcessing.bash --help' for more information.\n\n"
 exit
 }
 
-sort_logs() {
-output_fldr=$1
-FULLID_fldr=$2
-
-find ${output_fldr}/logs/ -type f -empty -delete
-mkdir -p ${output_fldr}/logs/${FULLID_fldr}
-for logs in ${output_fldr}/logs/*.out;do
-  sublog=$(grep -l "####$(echo ${FULLID_fldr} | sed 's|/|: |')####" $(realpath ${logs}))
-  [ -z ${sublog} ] || mv ${sublog} ${output_fldr}/logs/${FULLID_fldr}
-done
-[ $(ls -1 ${output_fldr}/dcgm-gpu-stats*.out 2>/dev/null | wc -l) -gt 0 ] && rm ${output_fldr}/dcgm-gpu-stats*.out
-}
-
 print_error() {
-printf "An error occurred during preprocessing, please check the log files.\n\n"
-sort_logs $1 $2
+printf "An error occurred during preprocessing, please check the logs.\n\n"
 exit
 }
 
@@ -342,7 +328,7 @@ else
   echo "  Transforming functional data to standard-space..." &&\
   bash ${scriptfolder}/steps/func_to_std.bash ${FULLID_folder} ${FULLID_file} &&\
   echo "  Computing functional timeseries using Brainnetome Atlas..." &&\
-  bash ${scriptfolder}/steps/atlas_func.bash ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
+  bash ${scriptfolder}/steps/atlas_func.bash ${FULLID_folder} ${FULLID_file} ${scriptfolder}|| print_error ${output_folder} ${FULLID_folder}
 fi
 
 fi
@@ -380,12 +366,6 @@ else
 fi
 
 fi
-
-#----------------------------------------------------------------------
-#                       Move log files
-#----------------------------------------------------------------------
-
-sort_logs ${output_folder} ${FULLID_folder}
 
 printf %"$(tput cols)"s |tr " " "#"; printf "\n"
 printf 'Processing Completed!\n'

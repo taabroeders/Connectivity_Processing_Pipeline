@@ -34,6 +34,7 @@
 #Input variables
 FULLID_folder=$1
 FULLID_file=$2
+FILEDIR=$3/files
 
 #Check if script has already been completed
 [ -f func/${FULLID_folder}/${FULLID_file}_BNA_timeseries.txt ] && exit 0

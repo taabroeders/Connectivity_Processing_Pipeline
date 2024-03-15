@@ -330,7 +330,7 @@ else
   echo "  Transforming functional data to standard-space..." &&\
   sbatch --wait ${scriptfolder}/steps/func_to_std.bash ${FULLID_folder} ${FULLID_file} &&\
   echo "  Computing functional timeseries using Brainnetome Atlas..." &&\
-  sbatch --wait ${scriptfolder}/steps/atlas_func.bash ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
+  sbatch --wait ${scriptfolder}/steps/atlas_func.bash ${FULLID_folder} ${FULLID_file} ${scriptfolder}|| print_error ${output_folder} ${FULLID_folder}
 fi
 
 fi
