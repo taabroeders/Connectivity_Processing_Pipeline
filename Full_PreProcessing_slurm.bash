@@ -120,18 +120,6 @@ exit
 }
 
 #----------------------------------------------------------------------
-#                           LOAD MODULES
-#----------------------------------------------------------------------
-module load fsl/6.0.6.4
-module load FreeSurfer/7.3.2-centos8_x86_64
-module load ANTs/2.4.1
-module load art/2.1
-module load Anaconda3/2023.03
-module load GCC/9.3.0
-module load OpenMPI/4.0.3
-module load MRtrix/3.0.3-Python-3.8.2
-
-#----------------------------------------------------------------------
 #                         Input variables
 #----------------------------------------------------------------------
 
@@ -296,13 +284,13 @@ else
   echo "Starting volumetric preprocessing..."
   mkdir -p ${output_folder}/anat/${FULLID_folder} &&\
   echo "  Mapping BNA cortical parcellations to FS subject-space..." &&\
-  bash ${scriptfolder}/steps/atlas_fs.bash ${scriptfolder} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
+  sbatch --wait ${scriptfolder}/steps/atlas_fs.bash ${scriptfolder} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
   echo "  Mapping parcellations and segmentations to T1 space..." &&\
-  bash ${scriptfolder}/steps/fs_to_anat.bash ${anatomical} ${anatomical_noneck} ${anatomical_brain} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
+  sbatch --wait ${scriptfolder}/steps/fs_to_anat.bash ${anatomical} ${anatomical_noneck} ${anatomical_brain} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} &&\
   echo "  Performing hybrid 5TT segmentations..." &&\
-  bash ${scriptfolder}/steps/hsvs_5ttgen.bash ${anatomical_noneck} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} ${scriptfolder} ${lesionmask} &&\
+  sbatch --wait ${scriptfolder}/steps/hsvs_5ttgen.bash ${anatomical_noneck} ${freesurfer_folder} ${FULLID_folder} ${FULLID_file} ${scriptfolder} ${lesionmask} &&\
   echo "  Mapping BNA to T1 space..." &&\
-  bash ${scriptfolder}/steps/atlas_anat.bash ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
+  sbatch --wait ${scriptfolder}/steps/atlas_anat.bash ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
 fi
 
 fi
@@ -329,20 +317,20 @@ else
   mkdir -p ${output_folder}/func/${FULLID_folder}
   if [ $func_sdc -eq 1 ]; then
   echo "  Performing fieldmap-less distortion correction..." &&\
-  bash ${scriptfolder}/steps/func_sdc.bash ${anatomical_brain} ${fmri} ${scriptfolder} ${FULLID_file} ${FULLID_folder} || print_error ${output_folder} ${FULLID_folder}
+  sbatch --wait ${scriptfolder}/steps/func_sdc.bash ${anatomical_brain} ${fmri} ${scriptfolder} ${FULLID_file} ${FULLID_folder} || print_error ${output_folder} ${FULLID_folder}
   fi
   echo "  Performing FEAT..." &&\
-  bash ${scriptfolder}/steps/feat.bash ${anatomical_noneck} ${anatomical_brain} ${fmri} ${scriptfolder} ${remove_vols} ${skip_slice_time} ${FULLID_folder} &&\
+  sbatch --wait ${scriptfolder}/steps/feat.bash ${anatomical_noneck} ${anatomical_brain} ${fmri} ${scriptfolder} ${remove_vols} ${skip_slice_time} ${FULLID_folder} &&\
   echo "  Running ICA-AROMA..." &&\
-  bash ${scriptfolder}/steps/ica-aroma.bash ${anatomical_brain} ${scriptfolder} ${FULLID_folder} &&\
+  sbatch --wait ${scriptfolder}/steps/ica-aroma.bash ${anatomical_brain} ${scriptfolder} ${FULLID_folder} &&\
   echo "  Computing the nuisance timeseries for the WM and CSF signal..." &&\
-  bash ${scriptfolder}/steps/wmcsf.bash ${FULLID_folder} ${FULLID_file} &&\
+  sbatch --wait ${scriptfolder}/steps/wmcsf.bash ${FULLID_folder} ${FULLID_file} &&\
   echo "  Applying temporal filtering and WM/CSF regression..." &&\
-  bash ${scriptfolder}/steps/tempfilt.bash ${FULLID_folder} ${FULLID_file} &&\
+  sbatch --wait ${scriptfolder}/steps/tempfilt.bash ${FULLID_folder} ${FULLID_file} &&\
   echo "  Transforming functional data to standard-space..." &&\
-  bash ${scriptfolder}/steps/func_to_std.bash ${FULLID_folder} ${FULLID_file} &&\
+  sbatch --wait ${scriptfolder}/steps/func_to_std.bash ${FULLID_folder} ${FULLID_file} &&\
   echo "  Computing functional timeseries using Brainnetome Atlas..." &&\
-  bash ${scriptfolder}/steps/atlas_func.bash ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
+  sbatch --wait ${scriptfolder}/steps/atlas_func.bash ${FULLID_folder} ${FULLID_file} || print_error ${output_folder} ${FULLID_folder}
 fi
 
 fi
@@ -367,16 +355,16 @@ if [ -f ${output_folder}/dwi/${FULLID_folder}/atlas/BNA_Atlas_FA.csv ]; then
 else
   echo "Starting preprocessing of diffusion weighted data..."
   echo "  Starting diffusion preprocessing..." &&\
-  bash ${scriptfolder}/steps/dwi_preproc1.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${scriptfolder} &&\
-  bash ${scriptfolder}/steps/dwi_preproc2.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${scriptfolder} &&\
+  sbatch --wait ${scriptfolder}/steps/dwi_preproc1.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${scriptfolder} &&\
+  sbatch --wait ${scriptfolder}/steps/dwi_preproc2.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${anatomical_brain} ${scriptfolder} &&\
   echo "  Starting diffusion reconstruction..." &&\
-  bash ${scriptfolder}/steps/dwi_recon.bash ${input_folder} ${FULLID_file} ${FULLID_folder} &&\
+  sbatch --wait ${scriptfolder}/steps/dwi_recon.bash ${input_folder} ${FULLID_file} ${FULLID_folder} &&\
   echo "  Transforming 5TT segmentations to dwi and create GM/WM interface..." &&\
-  bash ${scriptfolder}/steps/anat_to_dwi.bash ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
+  sbatch --wait ${scriptfolder}/steps/anat_to_dwi.bash ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
   echo "  Performing tractography and SIFT filtering..." &&\
-  bash ${scriptfolder}/steps/tractography.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
+  sbatch --wait ${scriptfolder}/steps/tractography.bash ${input_folder} ${FULLID_file} ${FULLID_folder} ${scriptfolder} &&\
   echo "  Computing structural connectivity matrices..." &&\
-  bash ${scriptfolder}/steps/atlas_dti.bash ${anatomical_noneck} ${FULLID_file} ${FULLID_folder} || print_error ${output_folder} ${FULLID_folder}
+  sbatch --wait ${scriptfolder}/steps/atlas_dti.bash ${anatomical_noneck} ${FULLID_file} ${FULLID_folder} || print_error ${output_folder} ${FULLID_folder}
 fi
 
 fi

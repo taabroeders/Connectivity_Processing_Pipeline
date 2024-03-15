@@ -39,8 +39,11 @@ This code will perform anatomical, functional and diffusion preprocessing to fac
 Broeders T.A.A., Koubiyr I., Schoonheim M.M. (2024). Connectivity Preprocessing Pipeline. GitHub. https://github.com/taabroeders/Connectivity_Processing_Pipeline<br/>
 
 ## How to use
-`bash Full_preProcessing.bash -i <input_folder> -o <output_folder> [options/flags]`<br/>
+`bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> [options/flags]`<br/>
 For more elaborate examples, see below.<br/>
+
+### Slurm usage
+To submit scripts of the individual steps to the slurm workload manager (sbatch), use `bash full_PreProcessing_slurm.bash`
 
 ### Required arguments:
   `-i [or --input] <input-folder>`<br/>
@@ -106,17 +109,21 @@ sub-<subject#>/                    <-- This is the <input-folder>
 ```
 
 ## Initialization
-### 1. Make sure all required modules are loaded and that the environmental variables are correctly set:
-<a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation/Linux" target="_blank">FSL</a> <br/>
+### 1. Load all required modules
+#### Option a: Using the <a href="https://modules.readthedocs.io/en/latest/" target="_blank">Environment Modules</a> package
+Open the load_modules.bash script in any text-editor and replace the module names with the ones applicable to your system. Use `module spider` to search for modules, or contact your system administrator.
+ 
+#### Option b: Setting the environmental variables manually
+ - <a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation/Linux" target="_blank">FSL</a> <br/>
 `export FSL_DIR=/path/to/fsl-x.x.x` <br/>
 `export PATH=${FSL_DIR}/bin:${PATH}` <br/>
-<a href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall" target="_blank">Freesurfer</a> <br/>
+ - <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall" target="_blank">Freesurfer</a> <br/>
 `export FREESURFER_HOME=/path/to/freesurferx.x.x` <br/>
 `export PATH=${FREESURFER_HOME}/bin:${PATH}` <br/>
-<a href="https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS" target="_blank">ANTS</a> <br/>
+ - <a href="https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS" target="_blank">ANTS</a> <br/>
 `export ANTSPATH=/path/to/ANTS/install/bin` <br/>
 `export PATH=${ANTSPATH}:${PATH}` <br/>
-<a href="https://www.mrtrix.org/download/linux-anaconda/" target="_blank">MRTRIX</a> <br/>
+ - <a href="https://www.mrtrix.org/download/linux-anaconda/" target="_blank">MRTRIX</a> <br/>
 `export MRTRIX_DIR=/path/to/MRtrix` <br/>
 `export PATH=${MRTRIX_DIR}:${PATH}` <br/>
 
