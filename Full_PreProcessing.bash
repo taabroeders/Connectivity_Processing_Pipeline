@@ -235,7 +235,7 @@ fi
 fi
 
 # Load modules
-bash ${scriptfolder}/load_modules.bash
+. ${scriptfolder}/load_modules.bash
 
 # Check modules
 bash ${scriptfolder}/steps/check_env.bash || print_help
