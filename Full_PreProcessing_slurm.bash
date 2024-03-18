@@ -69,8 +69,8 @@ sub-<subject#>/                                      <-- This is the <input-fold
       sub-<subject#>[_ses-<session#>]_dwi.bval
       sub-<subject#>[_ses-<session#>]_dwi.bvec
     fmap/[optional]
-      sub-<subject#>[_ses-<session#>]_*acq-bold_task-rest*_epi.nii.gz
-      sub-<subject#>[_ses-<session#>]_*acq-bold_task-rest*_epi.json
+      sub-<subject#>[_ses-<session#>]_*task-rest_acq-bold*_epi.nii.gz
+      sub-<subject#>[_ses-<session#>]_*task-rest_acq-bold*_epi.json
       sub-<subject#>[_ses-<session#>]_*acq-dwi*_epi.nii.gz
       sub-<subject#>[_ses-<session#>]_*acq-dwi*_epi.json
 
