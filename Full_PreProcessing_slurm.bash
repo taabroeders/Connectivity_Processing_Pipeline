@@ -166,6 +166,11 @@ while [ $# -gt 0 ] ; do
   shift
 done
 
+##if fmap-based disco was resquested, mention this feature is not ready yet
+if [ ${func_sdc_fmap} ]; then
+  printf "ERROR: fieldmap-based distortion correction requested for fMRI, but this feature is still in development";print_help
+fi
+
 ##if no flags were used, set all to 1 (i.e. run all steps)
 if [[ $a_flag -eq 0 && $f_flag -eq 0 && $d_flag -eq 0 ]];then
   a_flag=1
