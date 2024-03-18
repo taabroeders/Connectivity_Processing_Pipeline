@@ -47,7 +47,9 @@ To submit scripts of the individual steps to the slurm workload manager (sbatch)
 
 ### Required arguments:
   `-i [or --input] <input-folder>`<br/>
+  The BIDS-structured folder containing the original anatomical & fMRI/DWI scans. This folder-name includes the subjectID and (if available) sesionID. See [example](#example-of-a-bids-compatible-input-folder). <br/>
   `-o [or --output] <output-folder>`<br/>
+  This folder does not need to contain the subjectID and sessionID, those will be automatically created as subfolders and derivatives will be written in these subfolders automatically. <br/>
 
 ### Optional arguments:
   `--freesurfer <freesufer-folder>`<br/>
@@ -56,7 +58,7 @@ To submit scripts of the individual steps to the slurm workload manager (sbatch)
   Use lesion-filled T1 (anat. preprocessing). If provided, lesion-mask is also required. default=[no lesion-filled]<br/>
   `--lesion-mask <lesion-mask>`<br/>
   Use lesion mask (in T1 space) default=[no lesions]<br/>
-  <strong>Functional preprocessing</strong><br/>
+  <strong><u>Functional preprocessing</u></strong><br/>
   `--remove_vols <n>`<br/>
   Remove first <n> volumes (func. preprocessing) default=0<br/>
   `--skip_slice_time`<br/>
@@ -65,7 +67,7 @@ To submit scripts of the individual steps to the slurm workload manager (sbatch)
   Perform fieldmap-based distortion correction on the functional data (in development)<br/>
   `--func-sdc`<br/>
   Perform fieldmap-less distortion correction on the functional data (experimental)<br/>
-  <strong>Diffusion preprocessing</strong><br/>
+  <strong><u>Diffusion preprocessing</u></strong><br/>
   `--dwi-sdc_fmap`<br/>
   Perform fieldmap-based distortion correction on the diffusion data<br/>
   `--dwi-sdc`<br/>
@@ -81,8 +83,8 @@ To submit scripts of the individual steps to the slurm workload manager (sbatch)
 1. The `input folder` is subject/session-specific and the `output folder` is not. The subject (+session) subfolders will be automatically created in the output-folder (see example folder structure below for explanation).
 2. If no flags are provided, all steps will be performed. Anatomical preprocessing needs to be completed before funcitonal or diffusion preprocessing can be performed.
 3. The `--freesurfer argument` is required unless the folder is copied to output folder in the correct format:<br/>
-&nbsp;&nbsp;`../output-folder/freesurfer/sub-<subject#>/`<br/>
-&nbsp;&nbsp;`../output-folder/freesurfer/sub-<subject#>_ses-<session#>/`<br/>
+&nbsp;&nbsp;`<output-folder>/output-folder/freesurfer/sub-<subject#>/`<br/>
+&nbsp;&nbsp;`<output-folder>/output-folder/freesurfer/sub-<subject#>_ses-<session#>/`<br/>
 4. If a `--lesion-filled` T1 is provided, a `--lesion-mask` is also required.
 5. A BIDS folder structure is required for the input-folder.
 
