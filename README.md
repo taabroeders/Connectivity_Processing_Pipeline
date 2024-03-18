@@ -1,4 +1,5 @@
 # Connectivity Preprocessing Pipeline
+This is the preprocessing pipeline for functional and structural connectivity and network analyses, created by the Clinical Neurosciences team at the department of Anatomy and Neurosciences in Amsterdam. We hope it might be of use to you!
 
 ## Contents
 * [Overview](#overview)
