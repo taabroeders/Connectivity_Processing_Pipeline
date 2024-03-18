@@ -58,7 +58,7 @@ To submit scripts of the individual steps to the slurm workload manager (sbatch)
   Use lesion-filled T1 (anat. preprocessing). If provided, lesion-mask is also required. default=[no lesion-filled]<br/>
   `--lesion-mask <lesion-mask>`<br/>
   Use lesion mask (in T1 space) default=[no lesions]<br/>
-  <strong><u>Functional preprocessing</u></strong><br/>
+  <strong><ins>Functional preprocessing</ins></strong><br/>
   `--remove_vols <n>`<br/>
   Remove first <n> volumes (func. preprocessing) default=0<br/>
   `--skip_slice_time`<br/>
@@ -67,7 +67,7 @@ To submit scripts of the individual steps to the slurm workload manager (sbatch)
   Perform fieldmap-based distortion correction on the functional data (in development)<br/>
   `--func-sdc`<br/>
   Perform fieldmap-less distortion correction on the functional data (experimental)<br/>
-  <strong><u>Diffusion preprocessing</u></strong><br/>
+  <strong><ins>Diffusion preprocessing</ins></strong><br/>
   `--dwi-sdc_fmap`<br/>
   Perform fieldmap-based distortion correction on the diffusion data<br/>
   `--dwi-sdc`<br/>
