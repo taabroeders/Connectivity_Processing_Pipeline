@@ -137,16 +137,16 @@ This will download a few required files and set the appropriate conda environmen
 
 ## Example Usage
 ### Full processing (basic usage):
-`bash Full_preProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> [optional arguments]`<br/>
+`bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> [optional arguments]`<br/>
 This will run the full processing pipeline, including anatomical, functional and difussion processing (if anat, func and dwi data are all available).<br/>
 ### Anatomical processing:
-`bash Full_preProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -a --lesion-mask <lesion-mask> --lesion-filled <lesion-filled T1>`<br/>
+`bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -a --lesion-mask <lesion-mask> --lesion-filled <lesion-filled T1>`<br/>
 This will run only the anatomical part of the pipeline and shows all the associated optional arguments.
 ### Functional processing:
-`bash Full_preProcessing.bash -i <input_folder> -o <output_folder> -f --remove_vols 2 --skip_slice_time --func_sdc`<br/>
+`bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> -f --remove_vols 2 --skip_slice_time --func_sdc`<br/>
 This will run only the functional part of the pipeline (only possible if the anatomical part has already been completed). This example also shows some associated optional arguments of the functional part.<br/>
 ### Diffusion processing:
-`bash Full_preProcessing.bash -i <input_folder> -o <output_folder> -d --dwi_sdc`<br/>
+`bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> -d --dwi_sdc`<br/>
 This will run only the diffusion part of the pipeline (also only possible if the anatomical part has already been completed). This example also shows an associated optional argument.<br/>
 
 ## Contact

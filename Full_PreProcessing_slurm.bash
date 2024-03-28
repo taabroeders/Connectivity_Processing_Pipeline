@@ -25,7 +25,7 @@
 
 print_usage() {
 printf %"$(tput cols)"s |tr " " "#"
-printf "\nHOW TO USE:\nbash Full_preProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesufer-folder> [options/flags]
+printf "\nHOW TO USE:\nbash Full_PreProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesufer-folder> [options/flags]
 
 Required arguments:
   -i [or --input] <input-folder>
@@ -82,11 +82,11 @@ Make sure the following variables are correctly set:
   
 Example usage:
 1. Anatomical preprocessing:
-    bash Full_preProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -a --lesion-filled <lesion-filled T1> --lesion-mask <lesion-mask>
+    bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -a --lesion-filled <lesion-filled T1> --lesion-mask <lesion-mask>
 2. Functional preprocessing:
-    bash Full_preProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -f --remove_vols 2 --func-sdc
+    bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -f --remove_vols 2 --func-sdc
 3. Diffusion preprocessing:
-    bash Full_preProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -d --lesion-filled <lesion-filled T1> --lesion-mask <lesion-mask> --dwi-sdc
+    bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -d --lesion-filled <lesion-filled T1> --lesion-mask <lesion-mask> --dwi-sdc
 
 Please use the following citation to refer to this work:
 Broeders T.A.A., Koubiyr I., Schoonheim M.M. (2024). Connectivity Preprocessing Pipeline. GitHub. https://github.com/taabroeders/Connectivity_Processing_Pipeline\n"
@@ -96,7 +96,7 @@ exit
 }
 
 print_help() {
-printf "Try: 'bash Full_preProcessing.bash --help' for more information.\n\n"
+printf "Try: 'bash Full_PreProcessing.bash --help' for more information.\n\n"
 exit
 }
 
@@ -210,9 +210,9 @@ if [[ ${a_flag} -eq 1 ]]; then
   if [ ! -f ${anatomical_raw} ]; then
   printf "ERROR: Requested anatomical preprocessing, but no anatomical data found.\n\n"; print_help
   fi
-  if [ ! -z ${lesionfilled} ] && [ ! -f ${lesionfilled}]; then
+  if [ ! -z ${lesionfilled} ] && [ ! -f ${lesionfilled} ]; then
   printf "ERROR: Lesion filled T1 supplied, but file does not exist.\n\n"; print_help
-  elif [ ! -z ${lesionfilled} ] && [ ! -f ${lesionmask}]; then
+  elif [ ! -z ${lesionfilled} ] && [ ! -f ${lesionmask} ]; then
   printf "ERROR: Lesion filled T1 supplied, but lesion mask not found.\n\n"; print_help
   fi
   if [ ! -f ${freesurfer_input}/stats/aseg.stats ]; then
@@ -254,7 +254,7 @@ freesurfer_folder=${output_folder}/freesurfer/${FULLID_file}
 printf %"$(tput cols)"s |tr " " "#"; printf "\n"
 echo "Processing $(echo ${FULLID_folder} | sed 's|/|: |')"
 printf %"$(tput cols)"s |tr " " "#"; printf "\n"
-printf "Run '${scriptfolder}/watchlogs.bash ${output_folder} sub-${SUBID} ses-${SESID}' to view logs in real-time\n\n"
+printf "Run 'bash ${scriptfolder}/watchlogs.bash ${output_folder} sub-${SUBID} ses-${SESID}' to view logs in real-time\n\n"
 
 #----------------------------------------------------------------------
 #                Anatomical preprocessing
