@@ -43,7 +43,7 @@
 [ -z $ANTSPATH ] || [ ! -f ${ANTSPATH}/ANTS ] || [ -z $(printf $PATH | grep $ANTSPATH) ]  &&\
 { printf 'ERROR: ANTSPATH not correctly set as environmental variable or not added to PATH, aborting...\n\n' ; exit 1; }
 
-[ -z $(printf $PATH | grep MRtrix) ] &&\
+[ -z $(printf $PATH | tr "[:lower:]" "[:upper:]" | grep MRTRIX) ] || [ -z $(which mrview) ] &&\
 { printf 'ERROR: MRtrix not correctly added to PATH, aborting...\n\n' ; exit 1; }
 
 [ -d $1/files/MRtrix3Tissue ] &&\

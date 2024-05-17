@@ -104,10 +104,10 @@ sort_logs() {
 output_fldr=$1
 FULLID_fldr=$2
 
-find ${output_fldr}/logs/ -type f -empty -delete
+find ${output_fldr}/logs/ -type f -empty -delete 2>/dev/null
 mkdir -p ${output_fldr}/logs/${FULLID_fldr}
 for logs in ${output_fldr}/logs/*.out;do
-  sublog=$(grep -l "####$(echo ${FULLID_fldr} | sed 's|/|: |')####" $(realpath ${logs}))
+  sublog=$(grep -l "####$(echo ${FULLID_fldr} | sed 's|/|: |')####" $(realpath ${logs}) 2>/dev/null)
   [ -z ${sublog} ] || mv ${sublog} ${output_fldr}/logs/${FULLID_fldr}
 done
 [ $(ls -1 ${output_fldr}/dcgm-gpu-stats*.out 2>/dev/null | wc -l) -gt 0 ] && rm ${output_fldr}/dcgm-gpu-stats*.out
@@ -135,7 +135,7 @@ lesionfilled='' #location of lesion-filled T1
 remove_vols=0 #remove #n dummy volumes for functional preprocessing
 skip_slice_time=0 #perform slice-timing correction
 func_sdc=0 #perform experimental fieldmap-less distortion correction on functional data
-func_sdc=0 #perform fieldmap-based distortion correction on functional data
+func_sdc_fmap=0 #perform fieldmap-based distortion correction on functional data
 dwi_sdc=0 #perform experimental fieldmap-less distortion correction on diffusion data
 dwi_sdc_fmap=0 #perform fieldmap-based distortion correction on diffusion data
 SUBID='' #subject identifier
@@ -153,12 +153,12 @@ while [ $# -gt 0 ] ; do
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
     --skip_slice_time | --skip_slice-time) skip_slice_time=1 ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
-    --lesion-mask | lesion_mask) lesionmask=$(realpath "$2"); shift ;;
-    --lesion-filled | lesion_filled) lesionfilled=$(realpath "$2"); shift ;;
-    --func-sdc | func_sdc) func_sdc=1 ;;
-    --func-sdc-fmap | func_sdc_fmap) func_sdc_fmap=1 ;;
-    --dwi-sdc | func_sdc) dwi_sdc=1 ;;
-    --dwi-sdc-fmap | dwi_sdc_fmap) dwi_sdc_fmap=1 ;;
+    --lesion-mask | --lesion_mask) lesionmask=$(realpath "$2"); shift ;;
+    --lesion-filled | --lesion_filled) lesionfilled=$(realpath "$2"); shift ;;
+    --func-sdc | --func_sdc) func_sdc=1 ;;
+    --func-sdc-fmap | --func_sdc_fmap) func_sdc_fmap=1 ;;
+    --dwi-sdc | --dwi_sdc) dwi_sdc=1 ;;
+    --dwi-sdc-fmap | --dwi_sdc_fmap) dwi_sdc_fmap=1 ;;
     -h|-\?|--help) print_usage ;;
     -?*) printf 'ERROR: Unknown option %s\n\n' "$1"; print_help ;;
     *) break ;;
@@ -215,9 +215,6 @@ if [[ ${a_flag} -eq 1 ]]; then
   elif [ ! -z ${lesionfilled} ] && [ ! -f ${lesionmask} ]; then
   printf "ERROR: Lesion filled T1 supplied, but lesion mask not found.\n\n"; print_help
   fi
-  if [ ! -f ${freesurfer_input}/stats/aseg.stats ]; then
-  printf "ERROR: The supplied freesurfer folder is incorrect.\n\n"; print_help
-  fi
 fi
 
 if [ ! -z ${freesurfer_input} ] && [ ! -f ${freesurfer_input}/stats/aseg.stats ]; then
@@ -254,7 +251,8 @@ freesurfer_folder=${output_folder}/freesurfer/${FULLID_file}
 printf %"$(tput cols)"s |tr " " "#"; printf "\n"
 echo "Processing $(echo ${FULLID_folder} | sed 's|/|: |')"
 printf %"$(tput cols)"s |tr " " "#"; printf "\n"
-printf "Run 'bash ${scriptfolder}/watchlogs.bash ${output_folder} sub-${SUBID} ses-${SESID}' to view logs in real-time\n\n"
+FULLID_ws=$(echo ${FULLID_folder} | sed 's|/| |')
+printf "Run 'bash ${scriptfolder}/watchlogs.bash ${output_folder} ${FULLID_ws}' to view logs in real-time\n\n"
 
 #----------------------------------------------------------------------
 #                Anatomical preprocessing

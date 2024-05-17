@@ -1,10 +1,8 @@
 #!/bin/bash
 
-module load Anaconda3/2023.03
+[ -z $(which conda) ] && module load Anaconda3/2023.03
 
 [ -d $(dirname $0)/files/ICA-AROMA ] || git submodule update --init --recursive
-
-[ -d $(dirname $0)/files/niftyseg ] || git submodule update --init --recursive
 
 [ -d $(dirname $0)/files/MRtrix3Tissue ] || git submodule update --init --recursive
 
