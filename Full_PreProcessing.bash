@@ -153,7 +153,7 @@ while [ $# -gt 0 ] ; do
 done
 
 ##if fmap-based disco was resquested, mention this feature is not ready yet
-if [ ${func_sdc_fmap} ]; then
+if [[ ${func_sdc_fmap} -eq 1 ]]; then
   printf "ERROR: fieldmap-based distortion correction requested for fMRI, but this feature is still in development";print_help
 fi
 

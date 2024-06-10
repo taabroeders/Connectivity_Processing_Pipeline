@@ -73,7 +73,7 @@ sed -i 's|RESTINGSTATE|'${restingstate}'|' ${outputdir}/feat_settings.fsf &&\
 sed -i 's|NUMVOXELS|'${numvoxels}'|' ${outputdir}/feat_settings.fsf &&\
 sed -i 's|STANDARDBRAIN|"'${FSLDIR}'/data/standard/MNI152_T1_2mm_brain"|' ${outputdir}/feat_settings.fsf &&\
 sed -i 's|OUTPUTDIR|"'${outputdir}'/fmri.feat"|' ${outputdir}/feat_settings.fsf &&\
-if [ ! ${skip_slice_timing} ];then
+if [ ${skip_slice_timing} -eq 0 ];then
     jq '.SliceTiming[]' ${restingstate_json} | tr -d '[,]'| awk 'NF' > ${outputdir}/slicetime_tmp.txt &&\
     cat -n ${outputdir}/slicetime_tmp.txt | sort -nsk2,2 | awk '{print $1}' > ${outputdir}/slice_order.txt &&\
     rm ${outputdir}/slicetime_tmp.txt &&\
