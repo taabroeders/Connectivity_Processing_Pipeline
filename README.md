@@ -37,14 +37,15 @@ This code will perform anatomical, functional and diffusion preprocessing to fac
  - Create structural connectivity matrix
 
 ### Please use the following citation to refer to this work:
-Broeders T.A.A., Koubiyr I., Schoonheim M.M. (2024). Connectivity Preprocessing Pipeline. GitHub. https://github.com/taabroeders/Connectivity_Processing_Pipeline<br/>
+Broeders T.A.A., Koubiyr I., Schoonheim M.M. (2024). Connectivity Preprocessing Pipeline. GitHub. https://github.com/taabroeders/Connectivity_Preprocessing_Pipeline<br/>
 
 ## How to use
 `bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> [options/flags]`<br/>
 For more elaborate examples, see below.<br/>
 
 ### Slurm usage
-To submit scripts of the individual steps to the slurm workload manager (sbatch), use `bash full_PreProcessing_slurm.bash`
+To submit scripts of the individual steps to the slurm workload manager (sbatch), use:<br/>
+`bash full_PreProcessing_slurm.bash`
 
 ### Required arguments:
   `-i [or --input] <input-folder>`<br/>
@@ -142,16 +143,16 @@ This will download a few required files and set the appropriate conda environmen
  <br/>
 
 ## Example Usage
-### Full processing (basic usage):
+### Full preprocessing (basic usage):
 `bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> [optional arguments]`<br/>
 This will run the full processing pipeline, including anatomical, functional and difussion processing (if anat, func and dwi data are all available).<br/>
-### Anatomical processing:
+### Anatomical preprocessing:
 `bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -a --lesion-mask <lesion-mask> --lesion-filled <lesion-filled T1>`<br/>
 This will run only the anatomical part of the pipeline and shows all the associated optional arguments.
-### Functional processing:
+### Functional preprocessing:
 `bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> -f --remove_vols 2 --skip_slice_time --func_sdc --advanced_tempfilt`<br/>
 This will run only the functional part of the pipeline (only possible if the anatomical part has already been completed). This example also shows some associated optional arguments of the functional part.<br/>
-### Diffusion processing:
+### Diffusion preprocessing:
 `bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> -d --dwi_sdc`<br/>
 This will run only the diffusion part of the pipeline (also only possible if the anatomical part has already been completed). This example also shows an associated optional argument.<br/>
 
