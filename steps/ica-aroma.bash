@@ -5,7 +5,6 @@
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	   #max CPU cores per process
 #SBATCH --time=2:00:00                #time limit (H:MM:SS)
-#SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
 
@@ -43,6 +42,16 @@ FULLID=$3
 #Print the ID of the subject (& session if available)
 printf "####$(echo ${FULLID} | sed 's|/|: |')####\n$(date)\n\n"
 
+#Select MC file
+if [ -f ${PWD}/func/${FULLID}/SynBOLD_DisCo/output/rBOLD.par ];then
+	nvol=$(fslval ${PWD}/func/${FULLID}/fmri.feat/filtered_func_data.nii.gz dim4)
+	tail ${PWD}/func/${FULLID}/SynBOLD_DisCo/output/rBOLD.par -n ${nvol} > \
+	${PWD}/func/${FULLID}/SynBOLD_DisCo/output/rBOLD_nodummy.par
+	MCfile=${PWD}/func/${FULLID}/SynBOLD_DisCo/output/rBOLD_nodummy.par
+else	
+	MCfile=${PWD}/func/${FULLID}/fmri.feat/mc/prefiltered_func_data_mcf.par
+fi
+
 #for each functional scan-session
 echo "Running ICA-AROMA..." &&\
 
@@ -50,9 +59,14 @@ echo "Running ICA-AROMA..." &&\
 eval "$(conda shell.bash hook)" &&\
 conda activate ${FILEDIR}/preproc_env_ica &&\
 ${FILEDIR}/preproc_env_ica/bin/python ${FILEDIR}/ICA-AROMA/ICA_AROMA.py \
-       -feat ${PWD}/func/${FULLID}/fmri.feat \
+       -in ${PWD}/func/${FULLID}/fmri.feat/filtered_func_data.nii.gz \
+       -a ${PWD}/func/${FULLID}/fmri.feat/reg/example_func2highres.mat \
+       -w ${PWD}/func/${FULLID}/fmri.feat/reg/highres2standard_warp.nii.gz \
+       -mc ${MCfile} \
        -out ${PWD}/func/${FULLID}/ICA_AROMA/ &&\
-conda deactivate &&\
+conda deactivate
+
+[ ! -d ${PWD}/func/${FULLID}/ICA_AROMA/ ] && exit 1
 
 printf "\n\n$(date)\n#### Done! ####\n"
 

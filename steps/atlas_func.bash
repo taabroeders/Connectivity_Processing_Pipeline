@@ -1,11 +1,10 @@
 #!/bin/bash
 
 #SBATCH --job-name=atlas_func         #a convenient name for your job
-#SBATCH --mem=3                       #max memory per node
+#SBATCH --mem=300M                    #max memory per node
 #SBATCH --partition=luna-cpu-short    #using luna short queue
-#SBATCH --cpus-per-task=1      	  #max CPU cores per process
+#SBATCH --cpus-per-task=1      	      #max CPU cores per process
 #SBATCH --time=0:05:00                #time limit (H:MM:SS)
-#SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
 

@@ -11,12 +11,12 @@ echo " WARNING: HSVS issue detected. Applying in-house written fix by removing f
 cd $SEGFOLDER
 
 #list which ventricle to include
-include=$(ls *-vessel.mif | grep -v ${exclude})
+include=$(printf "Left-vessel.mif\nRight-vessel.mif\n5th-Ventricle.mif"| grep -v ${exclude} | tr '\n' ' ')
 
 #This is changed relative to original MRtrix  to exclude the faulty vessel
 mrmath Left-Inf-Lat-Vent.mif 3rd-Ventricle.mif 4th-Ventricle.mif CSF.mif \
        ${include} \
-       Right-Inf-Lat-Vent.mif 5th-Ventricle.mif Left_LatVent_ChorPlex.mif Right_LatVent_ChorPlex.mif \
+       Right-Inf-Lat-Vent.mif Left_LatVent_ChorPlex.mif Right_LatVent_ChorPlex.mif \
        sum - | mrcalc - 1.0 -min tissue3_init.mif -force
 
 #Overwrite subsequent steps

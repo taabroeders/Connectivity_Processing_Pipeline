@@ -36,7 +36,10 @@ Optional arguments:
   --lesion-mask <lesion-mask>                        use lesion mask (in T1 space) default=[no lesions]
   Functional preprocessing
   --remove_vols <n>                                  remove first <n> volumes (func. preprocessing) default=0
-  --skip_slice_time                                  perform slice_time correction; default=[no slice-timing correction]
+  --skip_slice_time                                  skip slice-timing correction; default=[slice-timing correction]
+  --slice_order_file                                 text file indicating the slice order, for performing slice-timing correction (only needed when 'SliceTiming' is not available in func-json)
+  --advanced_tempfilt                                use mean wm/csf + motion parameters & derivatives for temporal filtering (default only mean wm/csf)
+  --dummy_reg                                        use dummy volume for intermediate registration from functional to anatomical data (sometimes has better wm/csf contrast)
   --func_sdc_fmap                                    perform fieldmap-based distortion correction on the functional data (in development) 
   --func_sdc                                         perform fieldmap-less distortion correction on the functional data (experimental)
   Diffusion preprocessing
@@ -120,6 +123,8 @@ lesionmask='' #location of lesion mask
 lesionfilled='' #location of lesion-filled T1
 remove_vols=0 #remove #n dummy volumes for functional preprocessing
 skip_slice_time=0 #perform slice-timing correction
+slice_order_file='NA' #location of slice_order text file
+advanced_tempfilt=0 # perform advanced temporal filtering
 func_sdc=0 #perform experimental fieldmap-less distortion correction on functional data
 func_sdc_fmap=0 #perform fieldmap-based distortion correction on functional data
 dwi_sdc=0 #perform experimental fieldmap-less distortion correction on diffusion data
@@ -138,6 +143,8 @@ while [ $# -gt 0 ] ; do
     -o | --output) output_folder=$(realpath "$2"); shift ;;
     --remove_vols | --remove-vols) remove_vols="$2"; shift ;;
     --skip_slice_time | --skip_slice-time) skip_slice_time=1 ;;
+    --slice_order_file | --slice-order_file) slice_order_file=$(realpath "$2"); shift ;;
+    --advanced_tempfilt | --advanced-tempfilt) advanced_tempfilt=1; ;;
     --freesurfer) freesurfer_input=$(realpath "$2"); shift ;;
     --lesion-mask | --lesion_mask) lesionmask=$(realpath "$2"); shift ;;
     --lesion-filled | --lesion_filled) lesionfilled=$(realpath "$2"); shift ;;
@@ -187,13 +194,13 @@ fi
 anatomical_raw=${input_folder}/anat/${FULLID_file}*_T1w.nii.gz
 anatomical_noneck=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w.nii.gz
 anatomical_brain=${output_folder}/anat/${FULLID_folder}/${FULLID_file}_T1w_brain.nii.gz
-fmri=${input_folder}/func/${FULLID_file}*_task-rest*_bold.nii.gz
+fmri=${input_folder}/func/${FULLID_file}*_task-rest_bold.nii.gz
 dwi=${input_folder}/dwi/${FULLID_file}*_dwi.nii.gz
 scriptfolder=$(dirname $(realpath $0))
 
 # Check if all required files are available
 if [[ ${a_flag} -eq 1 ]]; then
-  if [ ! -f ${anatomical_raw} ]; then
+  if [ -z ${lesionfilled} ] && [ ! -f ${anatomical_raw} ]; then
   printf "ERROR: Requested anatomical preprocessing, but no anatomical data found.\n\n"; print_help
   fi
   if [ ! -z ${lesionfilled} ] && [ ! -f ${lesionfilled} ]; then
@@ -209,7 +216,9 @@ fi
 
 if [[ ${f_flag} -eq 1 ]]; then
   if [ ! -f ${fmri} ] || [ ! -f ${fmri%%.nii.gz}.json ];then
-  printf "ERROR: Requested functional preprocessing, but not all functional MRI data found.\n\n"; print_help
+    if [ ! -f ${fmri} ] || [[ $slice_order_file == 'NA' ]] ;then
+      printf "ERROR: Requested functional preprocessing, but not all functional MRI data found.\n\n"; print_help
+    fi
   fi
 fi
 
@@ -263,7 +272,7 @@ if [ -d ${freesurfer_folder} ]; then
 elif [ -f ${freesurfer_input}/stats/aseg.stats ];then
   echo "Using previous Freesurfer run. Copying to output directory..."
   mkdir -p ${output_folder}/freesurfer/
-  cp -r ${freesurfer_input} ${freesurfer_folder}
+  cp -Lr ${freesurfer_input} ${freesurfer_folder}
 fi
 
 # Volumetric segmentation and registration
@@ -299,23 +308,23 @@ elif [ ! -d ${output_folder}/anat/${FULLID_folder}/atlas ]; then
   printf "ERROR: Requested functional preprocessing, but anatomical preprocessing not completed!\n\n"; print_help
 fi
 
-if [ -f ${output_folder}/func/${FULLID_folder}/atlas/denoised_func_data_nonaggr_hptf_BNatlas_timeseries.txt ]; then
+if [ -f ${output_folder}/func/${FULLID_folder}/${FULLID_file}_BNA_timeseries.txt ]; then
   echo "Functional MRI timeseries already exists. Remove the output folders if you would like to run functional preprocessing again, skipping for now..."
 else
   echo "Starting preprocessing of functional MRI data..."
   mkdir -p ${output_folder}/func/${FULLID_folder}
   if [ $func_sdc -eq 1 ]; then
   echo "  Performing fieldmap-less distortion correction..." &&\
-  bash ${scriptfolder}/steps/func_sdc.bash ${anatomical_brain} ${fmri} ${scriptfolder} ${FULLID_file} ${FULLID_folder} || print_error ${output_folder} ${FULLID_folder}
+  bash ${scriptfolder}/steps/func_sdc.bash ${anatomical_brain} ${fmri} ${scriptfolder} ${FULLID_file} ${FULLID_folder} ${remove_vols} || print_error ${output_folder} ${FULLID_folder}
   fi
   echo "  Performing FEAT..." &&\
-  bash ${scriptfolder}/steps/feat.bash ${anatomical_noneck} ${anatomical_brain} ${fmri} ${scriptfolder} ${remove_vols} ${skip_slice_time} ${FULLID_folder} &&\
+  bash ${scriptfolder}/steps/feat.bash ${anatomical_noneck} ${anatomical_brain} ${fmri} ${scriptfolder} ${remove_vols} ${skip_slice_time} ${slice_order_file} ${FULLID_folder} ${dummy_reg} &&\
   echo "  Running ICA-AROMA..." &&\
   bash ${scriptfolder}/steps/ica-aroma.bash ${anatomical_brain} ${scriptfolder} ${FULLID_folder} &&\
   echo "  Computing the nuisance timeseries for the WM and CSF signal..." &&\
   bash ${scriptfolder}/steps/wmcsf.bash ${FULLID_folder} ${FULLID_file} &&\
   echo "  Applying temporal filtering and WM/CSF regression..." &&\
-  bash ${scriptfolder}/steps/tempfilt.bash ${FULLID_folder} ${FULLID_file} &&\
+  bash ${scriptfolder}/steps/tempfilt.bash ${FULLID_folder} ${FULLID_file} ${advanced_tempfilt} &&\
   echo "  Transforming functional data to standard-space..." &&\
   bash ${scriptfolder}/steps/func_to_std.bash ${FULLID_folder} ${FULLID_file} &&\
   echo "  Computing functional timeseries using Brainnetome Atlas..." &&\
@@ -339,7 +348,7 @@ elif [ ! -d ${output_folder}/anat/${FULLID_folder}/atlas ]; then
   printf "ERROR: Requested diffusion preprocessing, but anatomical preprocessing not completed!\n\n"; print_help
 fi
 
-if [ -f ${output_folder}/dwi/${FULLID_folder}/atlas/BNA_Atlas_FA.csv ]; then
+if [ -f ${output_folder}/dwi/${FULLID_folder}/tractography/atlas/${FULLID_file}_BNA_Atlas_FA.csv ]; then
   echo "Diffusion MRI connectivity matrix already exists. Remove the output folders if you would like to run diffusion preprocessing again, skipping for now..."
 else
   echo "Starting preprocessing of diffusion weighted data..."

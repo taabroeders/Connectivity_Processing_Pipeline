@@ -5,7 +5,6 @@
 #SBATCH --partition=luna-short        #using luna short queue
 #SBATCH --cpus-per-task=2       	  #max CPU cores per process
 #SBATCH --time=01:00:00               #time limit (HH:MM:SS)
-#SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw                     #use anw-gpus
 #SBATCH --gres=gpu:1g.10gb:1
 #SBATCH --output=logs/slurm-%x.%j.out

@@ -5,7 +5,6 @@
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=2       	  #max CPU cores per process
 #SBATCH --time=00:10:00               #time limit (HH:MM:SS)
-#SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
 

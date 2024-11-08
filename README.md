@@ -21,7 +21,7 @@ This code will perform anatomical, functional and diffusion preprocessing to fac
  - Performing distortion correction (with or without fieldmaps)
  - Dummy-scan removal, slice-time correction, co-registration, registration to standard-space and gaussian smoothing in FEAT
  - Motion artefact removal using ICA-AROMA
- - Removing mean white-matter and CSF signal
+ - Removing mean white-matter and CSF signal (optional motion & derivatives)
  - High-pass temporal filtering
  - Computing functional timeseries using hybrid FIRST-Brainnetome Atlas
  - Create functional connectivity matrix
@@ -64,6 +64,12 @@ To submit scripts of the individual steps to the slurm workload manager (sbatch)
   Remove first <n> volumes (func. preprocessing) default=0<br/>
   `--skip_slice_time`<br/>
   Perform slice_time correction; default=[no slice-timing correction]<br/>
+  `--slice_order_file`<br/>
+  Text file indicating the slice order, for performing slice-timing correction (only needed when 'SliceTiming' is not available in func-json)<br/>
+  `--advanced_tempfilt`<br/>
+  Use mean wm/csf + motion parameters & derivatives for temporal filtering (default only mean wm/csf)<br/>
+  `--dummy_reg`<br/>
+  Use dummy volume for intermediate registration from functional to anatomical data (sometimes has better wm/csf contrast)<br/>
   `--func-sdc_fmap`<br/>
   Perform fieldmap-based distortion correction on the functional data (in development)<br/>
   `--func-sdc`<br/>
@@ -143,7 +149,7 @@ This will run the full processing pipeline, including anatomical, functional and
 `bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> --freesurfer <freesurfer-folder> -a --lesion-mask <lesion-mask> --lesion-filled <lesion-filled T1>`<br/>
 This will run only the anatomical part of the pipeline and shows all the associated optional arguments.
 ### Functional processing:
-`bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> -f --remove_vols 2 --skip_slice_time --func_sdc`<br/>
+`bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> -f --remove_vols 2 --skip_slice_time --func_sdc --advanced_tempfilt`<br/>
 This will run only the functional part of the pipeline (only possible if the anatomical part has already been completed). This example also shows some associated optional arguments of the functional part.<br/>
 ### Diffusion processing:
 `bash Full_PreProcessing.bash -i <input_folder> -o <output_folder> -d --dwi_sdc`<br/>

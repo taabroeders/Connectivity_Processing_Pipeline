@@ -5,7 +5,6 @@
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=2      	      #max CPU cores per process
 #SBATCH --time=1:00:00                #time limit (H:MM:SS)
-#SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
 
@@ -38,6 +37,7 @@ restingstate=$2
 subfolder=$3/files
 FULLID_file=$4
 FULLID_folder=$5
+remove_vols=$6
 outputdir=${PWD}/func/${FULLID_folder}
 
 #Check if script has already been completed
@@ -65,8 +65,7 @@ singularity run -e -B func/${FULLID_folder}/SynBOLD_DisCo:/tmp \
             -B func/${FULLID_folder}/SynBOLD_DisCo/output:/OUTPUTS \
             -B ${FREESURFER_HOME}/license.txt:/opt/freesurfer/license.txt \
              ${subfolder}/singularity/synbold-disco.sif \
-             --skull_stripped
-
+             --skull_stripped &&\
 
 printf "\n\n$(date)\n#### Done! ####\n"
 

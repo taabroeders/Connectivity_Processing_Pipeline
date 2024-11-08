@@ -5,7 +5,6 @@
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=2      	      #max CPU cores per process
 #SBATCH --time=0:45:00                #time limit (H:MM:SS)
-#SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
 
@@ -66,10 +65,10 @@ else
         fi
     done
 
-    for vessel in anat/${FULLID_folder}/hsvs_5tt/all_segmentations/*vessel.mif;do
-        if [ $(mrstats -mask ${vessel} -output count ${vessel}) -gt 0 ];then
+    for vessel in anat/${FULLID_folder}/hsvs_5tt/all_segmentations/*vessel.mif anat/${FULLID_folder}/hsvs_5tt/all_segmentations/5th-Ventricle.mif;do
+        if (( $(awk 'BEGIN{print ('$(printf $(mrstats -output mean ${vessel}))'>0.5)?1:0}') ));then
         bash ${STEPSDIR}/fix_hsvs_issues/fix_vessel_issue.bash anat/${FULLID_folder}/hsvs_5tt/all_segmentations/ \
-        ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz ${vessel} || exit 1 && break
+        ${FREESURFER_DIR} anat/${FULLID_folder}/hsvs_5tt/${FULLID_file}_5tthsvs_freesurfer.nii.gz $(basename ${vessel}) || exit 1 && break
         fi
     done
 fi

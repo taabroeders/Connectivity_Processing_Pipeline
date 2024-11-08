@@ -5,7 +5,6 @@
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	  #max CPU cores per process
 #SBATCH --time=0:30:00                #time limit (H:MM:SS)
-#SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
 
@@ -131,7 +130,7 @@ mri_vol2vol --mov anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_BN_Atlas_cut_dil
 
 #create GM/WM/CSF segmentations
 mri_compute_volume_fractions --o anat/${FULLID_folder}/FS_to_t1/${FULLID_file}_vol_frac --regheader \
-                             ${FULLID_file} ${freesurfer_folder}/mri/norm.mgz &&\
+                             ${FULLID_file} ${freesurfer_folder}/mri/norm.mgz || exit 1
 
 # Segmentations to T1
 B='cortex csf subcort_gm wm'

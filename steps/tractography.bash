@@ -1,11 +1,10 @@
 #!/bin/bash
 
 #SBATCH --job-name=tractography       #a convenient name for your job
-#SBATCH --mem=9G                      #max memory per node
-#SBATCH --partition=luna-cpu-short    #using luna short queue
+#SBATCH --mem=12G                      #max memory per node
+#SBATCH --partition=luna-cpu-long    #using luna short queue
 #SBATCH --cpus-per-task=16            #max CPU cores per process
-#SBATCH --time=6:00:00                #time limit (H:MM:SS)
-#SBATCH --nice=2000                   #allow other priority jobs to go first
+#SBATCH --time=12:00:00                #time limit (H:MM:SS)
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
 
@@ -64,7 +63,8 @@ dwi2response dhollander dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_
              dwi/${FULLID_folder}/tractography/tracts/${FULLID_file}_response_csf.txt \
              -fslgrad \
              ${dwi_bvec} \
-             ${dwi_bval} &&\
+             ${dwi_bval} \
+             -mask dwi/${FULLID_folder}/preprocessing/${FULLID_file}_b0_brain_mask.nii.gz &&\
 
 #Single-shell 3-tissue constrianed spherical deconvolution
 

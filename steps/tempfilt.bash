@@ -5,7 +5,6 @@
 #SBATCH --partition=luna-cpu-short    #using luna short queue
 #SBATCH --cpus-per-task=1      	  #max CPU cores per process
 #SBATCH --time=0:15:00                #time limit (H:MM:SS)
-#SBATCH --nice=2000                   #allow other priority jobs to go first
 #SBATCH --qos=anw-cpu                 #use anw-cpu's
 #SBATCH --output=logs/slurm-%x.%j.out
 
@@ -35,6 +34,7 @@
 #Input variables
 FULLID_folder=$1
 FULLID_file=$2
+advanced_tempfilt=$3
 
 #Check if script has already been completed
 [ -f func/${FULLID_folder}/temporal_filtering/${FULLID_file}_denoised_func_data_nonaggr_hptf_func.nii.gz ] && exit 0
@@ -45,15 +45,46 @@ printf "####$(echo ${FULLID_folder} | sed 's|/|: |')####\n$(date)\n\n"
 #Create output folder
 mkdir -p func/${FULLID_folder}/temporal_filtering &&\
 
+if [ ${advanced_tempfilt} -eq 1 ];then
+        #Select MC file
+        if [ -f func/${FULLID_folder}/SynBOLD_DisCo/output/rBOLD.par ];then
+                nvols=$(fslval func/${FULLID_folder}/ICA_AROMA/denoised_func_data_nonaggr.nii.gz dim4)
+                tail -n -${nvols} func/${FULLID_folder}/SynBOLD_DisCo/output/rBOLD.par \
+                > func/${FULLID_folder}/SynBOLD_DisCo/output/rBOLD_nodummy.par
+                MCfile=func/${FULLID_folder}/SynBOLD_DisCo/output/rBOLD_nodummy.par
+        else
+                MCfile=func/${FULLID_folder}/fmri.feat/mc/prefiltered_func_data_mcf.par
+        fi
+
+        nuisance_file=func/${FULLID_folder}/nuisance/${FULLID_file}_nuisance_timeseries_inclMP_derivatives
+
+        ## Compute additional temporal filtering options
+        echo "  Combining WM and CSF timeseries with motion parameters..." &&\
+        paste func/${FULLID_folder}/nuisance/${FULLID_file}_nuisance_timeseries \
+        ${MCfile} \
+        > func/${FULLID_folder}/nuisance/${FULLID_file}_nuisance_timeseries_inclMP &&\
+
+        echo "  Computing their derivatives..." &&\
+        head -1 func/${FULLID_folder}/nuisance/${FULLID_file}_nuisance_timeseries_inclMP \
+        | awk '{for(i=1;i<=NF;i++) {printf "0\t", $i-s[i]; s[i]=$i} print ""}' \
+        > ${nuisance_file}
+
+        awk 'NR==1{for(i=1;i<=NF;i++) s[i]=$i; next} {for(i=1;i<=NF;i++) {printf "%s\t", $i-s[i]; s[i]=$i} print ""}' \
+        func/${FULLID_folder}/nuisance/${FULLID_file}_nuisance_timeseries_inclMP \
+        >> ${nuisance_file}
+else
+        nuisance_file=func/${FULLID_folder}/nuisance/${FULLID_file}_nuisance_timeseries
+fi
+
 #Performing temporal filtering
-echo "Applying temporal filtering and WM/CSF regression..."
+echo "  Applying temporal filtering and nuisance regression..."
 echo "  Calculating temporal mean..."
 fslmaths func/${FULLID_folder}/ICA_AROMA/denoised_func_data_nonaggr.nii.gz \
          -Tmean func/${FULLID_folder}/temporal_filtering/${FULLID_file}_tempMean_func.nii.gz &&\
 
 echo "  Performing temporal regression and demeaning..." &&\
 fsl_glm -i func/${FULLID_folder}/ICA_AROMA/denoised_func_data_nonaggr.nii.gz \
-        -d func/${FULLID_folder}/nuisance/${FULLID_file}_nuisance_timeseries \
+        -d ${nuisance_file} \
         --demean \
         --out_res=func/${FULLID_folder}/temporal_filtering/${FULLID_file}_residual.nii.gz &&\
 
